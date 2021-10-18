@@ -4,6 +4,8 @@ using Random
 import REPL
 using REPL.TerminalMenus
 
+abstract type Tキャラクター end
+
 mutable struct Tキャラクター共通データ
     名前
     HP
@@ -12,7 +14,7 @@ mutable struct Tキャラクター共通データ
     スキルs
 end
 
-mutable struct Tプレイヤー
+mutable struct Tプレイヤー <: Tキャラクター
     _キャラクター共通データ::Tキャラクター共通データ
 end
 
@@ -20,21 +22,7 @@ function Tプレイヤー(名前, HP, 攻撃力, 防御力, スキルs)
     return Tプレイヤー(Tキャラクター共通データ(名前, HP, 攻撃力, 防御力, スキルs))    
 end
 
-function Base.getproperty(obj::Tプレイヤー, sym::Symbol)
-    if sym in [:名前, :HP, :攻撃力, :防御力, :スキルs] 
-        return Base.getproperty(obj._キャラクター共通データ, sym)
-    end
-    return Base.getfield(obj, sym)
-end
-
-function Base.setproperty!(obj::Tプレイヤー, sym::Symbol, val)
-    if sym in [:名前, :HP, :攻撃力, :防御力, :スキルs] 
-        return Base.setproperty!(obj._キャラクター共通データ, sym, val)
-    end
-    return Base.setfield!(obj, sym, val)
-end
-
-mutable struct Tモンスター
+mutable struct Tモンスター <: Tキャラクター
     _キャラクター共通データ::Tキャラクター共通データ
 end
 
@@ -42,14 +30,14 @@ function Tモンスター(名前, HP, 攻撃力, 防御力, スキルs)
     return Tモンスター(Tキャラクター共通データ(名前, HP, 攻撃力, 防御力, スキルs))    
 end
 
-function Base.getproperty(obj::Tモンスター, sym::Symbol)
+function Base.getproperty(obj::Tキャラクター, sym::Symbol)
     if sym in [:名前, :HP, :攻撃力, :防御力, :スキルs] 
         return Base.getproperty(obj._キャラクター共通データ, sym)
     end
     return Base.getfield(obj, sym)
 end
 
-function Base.setproperty!(obj::Tモンスター, sym::Symbol, val)
+function Base.setproperty!(obj::Tキャラクター, sym::Symbol, val)
     if sym in [:名前, :HP, :攻撃力, :防御力, :スキルs] 
         return Base.setproperty!(obj._キャラクター共通データ, sym, val)
     end
