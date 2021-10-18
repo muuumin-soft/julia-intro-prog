@@ -1,12 +1,15 @@
 module Game
 
 using Random
+import REPL
+using REPL.TerminalMenus
 
 mutable struct Tプレイヤー
     名前
     HP
     攻撃力
     防御力
+    スキルs
 end
 
 mutable struct Tモンスター
@@ -79,17 +82,24 @@ function 行動順決定(プレイヤーs, モンスターs)
     return shuffle(行動順)
 end
 
-function コマンド選択()
-    function isValidコマンド(コマンド)
-        return コマンド in ["1", "2"]
-    end
-
+function コマンド選択(行動者::Tプレイヤー)
     while true
-        コマンド = Base.prompt("[1]攻撃[2]大振り")
-        if isValidコマンド(コマンド)
-            return コマンド            
-        else
+        選択肢 = RadioMenu(["攻撃", "スキル"], pagesize=4)
+        選択index = request("行動を選択してください:", 選択肢)
+
+        if 選択index == -1
             println("正しいコマンドを入力してください")
+            continue
+        end
+
+        if 選択index == 1
+            return T通常攻撃()
+        elseif 選択index == 2
+            選択肢 = RadioMenu([s.名前 for s in 行動者.スキルs], pagesize=4)
+            選択index = request("スキルを選択してください:", 選択肢)
+            return 行動者.スキルs[選択index]
+        else
+            throw(DomainError("行動選択でありえない選択肢が選ばれています"))
         end
     end 
 end
@@ -111,12 +121,12 @@ end
 function 行動決定(行動者::Tプレイヤー, プレイヤーs, モンスターs)
     println(戦況表示(プレイヤーs, モンスターs))
     println("$(行動者.名前)のターン")
-    コマンド = コマンド選択()
+    コマンド = コマンド選択(行動者)
     return T行動(コマンド, 行動者, モンスターs[1])
 end
 
 function 行動決定(行動者::Tモンスター, プレイヤーs, モンスターs)
-    return T行動("1", 行動者, rand(行動可能な奴ら(プレイヤーs)))
+    return T行動(T通常攻撃(), 行動者, rand(行動可能な奴ら(プレイヤーs)))
 end
 
 function 行動実行!(行動)
@@ -145,12 +155,20 @@ function ゲームループ(プレイヤーs, モンスターs)
     end
 end
 
+function createスキル(スキルシンボル)
+    if スキルシンボル === :大振り
+        return Tスキル("大振り", 2, 0.4)
+    else
+        Throw(DomainError("未定義のスキルが指定されました"))
+    end
+end
+
 function main()
     モンスター = Tモンスター("ドラゴン", 400, 40, 10)
-    プレイヤー1 = Tプレイヤー("太郎", 100, 10, 10)
-    プレイヤー2 = Tプレイヤー("花子", 100, 10, 10)
-    プレイヤー3 = Tプレイヤー("遠藤君", 100, 10, 10)
-    プレイヤー4 = Tプレイヤー("高橋先生", 100, 10, 10)
+    プレイヤー1 = Tプレイヤー("太郎", 100, 10, 10, [createスキル(:大振り), createスキル(:大振り)])
+    プレイヤー2 = Tプレイヤー("花子", 100, 10, 10, [createスキル(:大振り), createスキル(:大振り)])
+    プレイヤー3 = Tプレイヤー("遠藤君", 100, 10, 10, [createスキル(:大振り), createスキル(:大振り)])
+    プレイヤー4 = Tプレイヤー("高橋先生", 100, 10, 10, [createスキル(:大振り), createスキル(:大振り)])
 
     println("モンスターに遭遇した！")
     println("戦闘開始！")

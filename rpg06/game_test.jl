@@ -3,11 +3,11 @@ include("game.jl")
 using Test
 
 function createキャラクターHP100()
-    return Game.Tプレイヤー("", 100, 0, 0)
+    return Game.Tプレイヤー("", 100, 0, 0, [])
 end
 
 function createプレイヤーHP100攻撃力10()
-    return Game.Tプレイヤー("", 100, 10, 10)
+    return Game.Tプレイヤー("", 100, 10, 10, [])
 end
 
 function createモンスターHP200攻撃力20()
@@ -15,11 +15,11 @@ function createモンスターHP200攻撃力20()
 end
 
 function createプレイヤーHP0()
-    return Game.Tプレイヤー("", 0, 0, 0)
+    return Game.Tプレイヤー("", 0, 0, 0, [])
 end
 
 function createプレイヤーHP1()
-    return Game.Tプレイヤー("", 1, 0, 0)
+    return Game.Tプレイヤー("", 1, 0, 0, [])
 end
 
 function createモンスターHP0()
@@ -31,7 +31,7 @@ function createモンスターHP1()
 end
 
 function createプレイヤー()
-    return Game.Tプレイヤー("", 0, 0, 0)
+    return Game.Tプレイヤー("", 0, 0, 0, [])
 end
 
 function createモンスター()
@@ -88,12 +88,12 @@ end
         p = createプレイヤーHP100攻撃力10()
         m = createモンスターHP200攻撃力20()
 
-        プレイヤーからモンスターへ攻撃 = Game.T行動(Game.Tスキル("大振り", 2, 0.4), p, m)
+        プレイヤーからモンスターへ攻撃 = Game.T行動(Game.createスキル(:大振り), p, m)
         Game.行動実行!(プレイヤーからモンスターへ攻撃)
         @test p.HP == 100
         @test m.HP == 180 || m.HP == 200
 
-        モンスターからプレイヤーへ攻撃 = Game.T行動(Game.Tスキル("大振り", 2, 0.4), m, p)
+        モンスターからプレイヤーへ攻撃 = Game.T行動(Game.createスキル(:大振り), m, p)
         Game.行動実行!(モンスターからプレイヤーへ攻撃)
         @test p.HP == 100 || p.HP == 60
         @test m.HP == 180 || m.HP == 200
@@ -169,7 +169,7 @@ end
 
 @testset "is戦闘終了" begin
     function createプレイヤーHP(HP)
-        return Game.Tプレイヤー("", HP, 0, 0)
+        return Game.Tプレイヤー("", HP, 0, 0, [])
     end
 
     function createモンスターHP(HP)
@@ -219,10 +219,10 @@ end
 
 @testset "戦況表示" begin
     モンスター = Game.Tモンスター("ドラゴン", 400, 40, 10)
-    プレイヤー1 = Game.Tプレイヤー("太郎", 100, 10, 10)
-    プレイヤー2 = Game.Tプレイヤー("花子", 100, 10, 10)
-    プレイヤー3 = Game.Tプレイヤー("遠藤君", 100, 10, 10)
-    プレイヤー4 = Game.Tプレイヤー("高橋先生", 100, 10, 10)
+    プレイヤー1 = Game.Tプレイヤー("太郎", 100, 10, 10, [])
+    プレイヤー2 = Game.Tプレイヤー("花子", 100, 10, 10, [])
+    プレイヤー3 = Game.Tプレイヤー("遠藤君", 100, 10, 10, [])
+    プレイヤー4 = Game.Tプレイヤー("高橋先生", 100, 10, 10, [])
     プレイヤーs = [プレイヤー1, プレイヤー2, プレイヤー3, プレイヤー4]
     モンスターs = [モンスター]
 
