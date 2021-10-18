@@ -3,7 +3,7 @@ include("game.jl")
 using Test
 
 function createキャラクターHP100()
-    return Game.Tプレイヤー("", 100, 0, 0, 0, [])
+    return Game.Tプレイヤー("", 100, 0, 1, 1, [])
 end
 
 function createプレイヤーHP100攻撃力10()
@@ -15,35 +15,35 @@ function createモンスターHP200攻撃力20()
 end
 
 function createプレイヤーHP0()
-    return Game.Tプレイヤー("", 0, 0, 0, 0, [])
+    return Game.Tプレイヤー("", 0, 0, 1, 1, [])
 end
 
 function createプレイヤーHP1()
-    return Game.Tプレイヤー("", 1, 0, 0, 0, [])
+    return Game.Tプレイヤー("", 1, 0, 1, 1, [])
 end
 
 function createモンスターHP0()
-    return Game.Tモンスター("", 0, 0, 0, 0, [])
+    return Game.Tモンスター("", 0, 0, 1, 1, [])
 end
 
 function createモンスターHP1()
-    return Game.Tモンスター("", 1, 0, 0, 0, [])
+    return Game.Tモンスター("", 1, 0, 1, 1, [])
 end
 
 function createプレイヤー()
-    return Game.Tプレイヤー("", 0, 0, 0, 0, [])
+    return Game.Tプレイヤー("", 0, 0, 1, 1, [])
 end
 
 function createモンスター()
-    return Game.Tモンスター("", 0, 0, 0, 0, [])
+    return Game.Tモンスター("", 0, 0, 1, 1, [])
 end
 
-function createプレイヤーHP100攻撃力(攻撃力)
-    return Game.Tプレイヤー("", 100, 0, 攻撃力, 0, [])
+function createプレイヤーHP(HP)
+    return Game.Tプレイヤー("", HP, 0, 1, 1, [])
 end
 
-function createモンスターHP100攻撃力(攻撃力)
-    return Game.Tモンスター("", 100, 0, 攻撃力, 0, [])
+function createモンスターHP(HP)
+    return Game.Tモンスター("", HP, 0, 1, 1, [])
 end
 
 @testset "HP減少" begin
@@ -190,23 +190,15 @@ end
 end
 
 @testset "is戦闘終了" begin
-    function createプレイヤーHP(HP)
-        return Game.Tプレイヤー("", HP, 0, 0, 0, [])
-    end
-
-    function createモンスターHP(HP)
-        return Game.Tモンスター("", HP, 0, 0, 0, [])
-    end
-
     @testset "1vs1 両者生存" begin
-        p = createプレイヤーHP(1)
-        m = createモンスターHP(1)
+        p = createプレイヤーHP1()
+        m = createモンスターHP1()
         @test Game.is戦闘終了([p], [m]) == false
     end
 
     @testset "1vs1 プレイヤー死亡" begin
-        p = createプレイヤーHP(0)
-        m = createモンスターHP(1)
+        p = createプレイヤーHP0()
+        m = createモンスターHP1()
         @test Game.is戦闘終了([p], [m]) == true
     end
 end
