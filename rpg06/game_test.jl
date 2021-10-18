@@ -11,7 +11,7 @@ function createプレイヤーHP100攻撃力10()
 end
 
 function createモンスターHP200攻撃力20()
-    return Game.Tモンスター("", 200, 20, 10)
+    return Game.Tモンスター("", 200, 20, 10, [])
 end
 
 function createプレイヤーHP0()
@@ -23,11 +23,11 @@ function createプレイヤーHP1()
 end
 
 function createモンスターHP0()
-    return Game.Tモンスター("", 0, 0, 0)
+    return Game.Tモンスター("", 0, 0, 0, [])
 end
 
 function createモンスターHP1()
-    return Game.Tモンスター("", 1, 0, 0)
+    return Game.Tモンスター("", 1, 0, 0, [])
 end
 
 function createプレイヤー()
@@ -35,7 +35,7 @@ function createプレイヤー()
 end
 
 function createモンスター()
-    return Game.Tモンスター("", 0, 0, 0)
+    return Game.Tモンスター("", 0, 0, 0, [])
 end
 
 function createプレイヤーHP100攻撃力(攻撃力)
@@ -43,7 +43,7 @@ function createプレイヤーHP100攻撃力(攻撃力)
 end
 
 function createモンスターHP100攻撃力(攻撃力)
-    return Game.Tモンスター("", 100, 攻撃力, 0)
+    return Game.Tモンスター("", 100, 攻撃力, 0, [])
 end
 
 @testset "HP減少" begin
@@ -195,7 +195,7 @@ end
     end
 
     function createモンスターHP(HP)
-        return Game.Tモンスター("", HP, 0, 0)
+        return Game.Tモンスター("", HP, 0, 0, [])
     end
 
     @testset "1vs1 両者生存" begin
@@ -240,7 +240,7 @@ end
 end
 
 @testset "戦況表示" begin
-    モンスター = Game.Tモンスター("ドラゴン", 400, 40, 10)
+    モンスター = Game.Tモンスター("ドラゴン", 400, 40, 10, [])
     プレイヤー1 = Game.Tプレイヤー("太郎", 100, 10, 10, [])
     プレイヤー2 = Game.Tプレイヤー("花子", 100, 10, 10, [])
     プレイヤー3 = Game.Tプレイヤー("遠藤君", 100, 10, 10, [])

@@ -4,7 +4,7 @@ using Random
 import REPL
 using REPL.TerminalMenus
 
-mutable struct Tプレイヤー
+mutable struct Tキャラクター共通データ
     名前
     HP
     攻撃力
@@ -12,11 +12,48 @@ mutable struct Tプレイヤー
     スキルs
 end
 
+mutable struct Tプレイヤー
+    _キャラクター共通データ::Tキャラクター共通データ
+end
+
+function Tプレイヤー(名前, HP, 攻撃力, 防御力, スキルs)
+    return Tプレイヤー(Tキャラクター共通データ(名前, HP, 攻撃力, 防御力, スキルs))    
+end
+
+function Base.getproperty(obj::Tプレイヤー, sym::Symbol)
+    if sym in [:名前, :HP, :攻撃力, :防御力, :スキルs] 
+        return Base.getproperty(obj._キャラクター共通データ, sym)
+    end
+    return Base.getfield(obj, sym)
+end
+
+function Base.setproperty!(obj::Tプレイヤー, sym::Symbol, val)
+    if sym in [:名前, :HP, :攻撃力, :防御力, :スキルs] 
+        return Base.setproperty!(obj._キャラクター共通データ, sym, val)
+    end
+    return Base.setfield!(obj, sym, val)
+end
+
 mutable struct Tモンスター
-    名前
-    HP
-    攻撃力
-    防御力
+    _キャラクター共通データ::Tキャラクター共通データ
+end
+
+function Tモンスター(名前, HP, 攻撃力, 防御力, スキルs)
+    return Tモンスター(Tキャラクター共通データ(名前, HP, 攻撃力, 防御力, スキルs))    
+end
+
+function Base.getproperty(obj::Tモンスター, sym::Symbol)
+    if sym in [:名前, :HP, :攻撃力, :防御力, :スキルs] 
+        return Base.getproperty(obj._キャラクター共通データ, sym)
+    end
+    return Base.getfield(obj, sym)
+end
+
+function Base.setproperty!(obj::Tモンスター, sym::Symbol, val)
+    if sym in [:名前, :HP, :攻撃力, :防御力, :スキルs] 
+        return Base.setproperty!(obj._キャラクター共通データ, sym, val)
+    end
+    return Base.setfield!(obj, sym, val)
 end
 
 struct T行動
@@ -182,7 +219,7 @@ function createスキル(スキルシンボル)
 end
 
 function main()
-    モンスター = Tモンスター("ドラゴン", 400, 40, 10)
+    モンスター = Tモンスター("ドラゴン", 400, 40, 10, [])
     プレイヤー1 = Tプレイヤー("太郎", 100, 10, 10, [createスキル(:大振り), createスキル(:連続攻撃)])
     プレイヤー2 = Tプレイヤー("花子", 100, 10, 10, [createスキル(:大振り), createスキル(:連続攻撃)])
     プレイヤー3 = Tプレイヤー("遠藤君", 100, 10, 10, [createスキル(:大振り), createスキル(:連続攻撃)])
