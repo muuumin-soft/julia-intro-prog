@@ -38,6 +38,13 @@ function createモンスター()
     return Game.Tモンスター("", 0, 0, 0)
 end
 
+function createプレイヤーHP100攻撃力(攻撃力)
+    return Game.Tプレイヤー("", 100, 攻撃力, 0, [])
+end
+
+function createモンスターHP100攻撃力(攻撃力)
+    return Game.Tモンスター("", 100, 攻撃力, 0)
+end
 
 @testset "HP減少" begin
 
@@ -97,6 +104,21 @@ end
         Game.行動実行!(モンスターからプレイヤーへ攻撃)
         @test p.HP == 100 || p.HP == 60
         @test m.HP == 180 || m.HP == 200
+    end 
+
+    @testset "連続攻撃" begin
+        p = createプレイヤーHP100攻撃力10()
+        m = createモンスターHP200攻撃力20()
+
+        プレイヤーからモンスターへ攻撃 = Game.T行動(Game.createスキル(:連続攻撃), p, m)
+        Game.行動実行!(プレイヤーからモンスターへ攻撃)
+        @test p.HP == 100
+        @test 200 - 5 * 5 <= m.HP <= 200 - 5 * 2 
+
+        モンスターからプレイヤーへ攻撃 = Game.T行動(Game.createスキル(:連続攻撃), m, p)
+        Game.行動実行!(モンスターからプレイヤーへ攻撃)
+        @test 100 - 10 * 5 <= p.HP <= 100 - 10 * 2 
+        @test 200 - 5 * 5 <= m.HP <= 200 - 5 * 2 
     end 
 end
 
