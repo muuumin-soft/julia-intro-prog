@@ -34,6 +34,16 @@ struct Tスキル
     消費MP
     攻撃回数min
     攻撃回数max
+    Tスキル(名前, 威力, 命中率, 消費MP, 攻撃回数min, 攻撃回数max) = begin
+        if !(0 ≤ 命中率 ≤ 1)
+            throw(DomainError("命中率は0から1の間でなければなりません"))
+        end        
+        new(名前, 威力, 命中率, 消費MP, 攻撃回数min, 攻撃回数max)  
+    end
+end
+
+function Tスキル(名前, 威力, 命中率, 消費MP) 
+    return Tスキル(名前, 威力, 命中率, 消費MP, 1, 1)
 end
 
 function ダメージ計算(攻撃力, 防御力)
@@ -163,7 +173,7 @@ end
 
 function createスキル(スキルシンボル)
     if スキルシンボル == :大振り
-        return Tスキル("大振り", 2, 0.4, 0, 1, 1)
+        return Tスキル("大振り", 2, 0.4, 0)
     elseif スキルシンボル == :連続攻撃
         return Tスキル("連続攻撃", 0.5, 1, 10, 2, 5)
     else
