@@ -1,4 +1,7 @@
-abstract type Tスキル end
+abstract type T行動内容 end 
+abstract type Tスキル <: T行動内容　end 
+struct T通常攻撃 <: T行動内容 end
+struct Tかばう <: Tスキル end
 
 struct T攻撃スキル <: Tスキル
     名前
@@ -33,8 +36,6 @@ end
 function T攻撃スキル(名前, 威力, 命中率, 消費MP) 
     return T攻撃スキル(名前, 威力, 命中率, 消費MP, 1, 1)
 end
-
-struct T通常攻撃 end
 
 function createスキル(スキルシンボル)
     if スキルシンボル == :大振り
