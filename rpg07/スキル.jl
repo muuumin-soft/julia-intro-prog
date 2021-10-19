@@ -1,11 +1,13 @@
-struct Tスキル
+abstract type Tスキル end
+
+struct T攻撃スキル <: Tスキル
     名前
     威力
     命中率
     消費MP
     攻撃回数min
     攻撃回数max
-    Tスキル(名前, 威力, 命中率, 消費MP, 攻撃回数min, 攻撃回数max) = begin
+    T攻撃スキル(名前, 威力, 命中率, 消費MP, 攻撃回数min, 攻撃回数max) = begin
         if 威力 < 0
             throw(DomainError("威力が負の値になっています"))
         end
@@ -28,17 +30,17 @@ struct Tスキル
     end
 end
 
-function Tスキル(名前, 威力, 命中率, 消費MP) 
-    return Tスキル(名前, 威力, 命中率, 消費MP, 1, 1)
+function T攻撃スキル(名前, 威力, 命中率, 消費MP) 
+    return T攻撃スキル(名前, 威力, 命中率, 消費MP, 1, 1)
 end
 
 struct T通常攻撃 end
 
 function createスキル(スキルシンボル)
     if スキルシンボル == :大振り
-        return Tスキル("大振り", 2, 0.4, 0)
+        return T攻撃スキル("大振り", 2, 0.4, 0)
     elseif スキルシンボル == :連続攻撃
-        return Tスキル("連続攻撃", 0.5, 1, 10, 2, 5)
+        return T攻撃スキル("連続攻撃", 0.5, 1, 10, 2, 5)
     else
         Throw(DomainError("未定義のスキルが指定されました"))
     end
