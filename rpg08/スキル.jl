@@ -42,6 +42,8 @@ function createスキル(スキルシンボル)
         return T攻撃スキル("大振り", 2, 0.4, 0)
     elseif スキルシンボル == :連続攻撃
         return T攻撃スキル("連続攻撃", 0.5, 1, 10, 2, 5)
+    elseif スキルシンボル === :かばう
+        return Tかばう()
     else
         Throw(DomainError("未定義のスキルが指定されました"))
     end
