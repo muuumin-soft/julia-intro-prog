@@ -3,7 +3,7 @@ include("game.jl")
 using Test
 
 function createキャラクターHP100()
-    return Game.Tプレイヤー("", 100, 0, 1, 1, [])
+    return Game.Tプレイヤー("", 100, 0, 1, 10, [])
 end
 
 function createプレイヤーHP100攻撃力10()
@@ -251,4 +251,5 @@ end
     ドラゴン HP:400 MP:80
     ********************"""
 end
+
 
