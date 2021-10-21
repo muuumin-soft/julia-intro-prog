@@ -120,6 +120,20 @@ end
         @test 100 - 10 * 5 <= p.HP <= 100 - 10 * 2 
         @test 200 - 5 * 5 <= m.HP <= 200 - 5 * 2 
     end 
+
+    @testset "かばう" begin
+        太郎 = createキャラクターHP100()
+        花子 = createキャラクターHP100()
+        ドラゴン = createモンスターHP200攻撃力20()
+    
+        太郎が花子をかばう = Game.T行動(Game.createスキル(:かばう), 太郎, 花子)
+        Game.行動実行!(太郎が花子をかばう)
+    
+        ドラゴンから花子へ攻撃 = Game.T行動(Game.T通常攻撃(), ドラゴン, 花子)
+        Game.行動実行!(ドラゴンから花子へ攻撃)
+        @test 花子.HP == 100
+        @test 太郎.HP == 80 
+    end 
 end
 
 @testset "is戦闘終了" begin
