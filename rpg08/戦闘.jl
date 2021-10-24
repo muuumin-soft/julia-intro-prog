@@ -89,10 +89,33 @@ function 行動順決定(プレイヤーs, モンスターs)
     return shuffle(行動順)
 end
 
+function is誰かをかばっている(行動者::Tキャラクター, プレイヤーs, モンスターs)
+    全キャラクターs = vcat(プレイヤーs, モンスターs)
+    for p in 全キャラクターs
+        if p.かばってくれているキャラクター == 行動者
+            return (true, p)
+        end
+    end
+    return (false, nothing)
+end
+
+function 行動前処理!(行動者::Tキャラクター, プレイヤーs, モンスターs)
+    isかばっている, 対象 = is誰かをかばっている(行動者, プレイヤーs, モンスターs)
+    if isかばっている
+        かばう解除!(行動者, 対象)
+    end
+end
+
+function かばう解除!(行動者, 対象者)
+    println("$(行動者.名前)は$(対象者.名前)をかばうのをやめた！")
+    対象者.かばってくれているキャラクター = nothing
+end
+
 function ゲームループ(プレイヤーs, モンスターs)
     while true
         for 行動者 in 行動順決定(プレイヤーs, モンスターs)
             if is行動可能(行動者)
+                行動前処理!(行動者, プレイヤーs, モンスターs)
                 行動 = 行動決定(行動者, プレイヤーs, モンスターs)
                 行動実行!(行動)
                 if is戦闘終了(プレイヤーs, モンスターs)
