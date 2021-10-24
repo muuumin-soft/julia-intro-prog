@@ -26,18 +26,22 @@ function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モ�
             end
         end
     end
-    
+
+    function 行動対象を選択し行動を決定(行動内容::T行動内容)
+        対象リスト = get対象リスト(行動内容)
+        if length(対象リスト) == 1
+            return T行動(行動内容, 行動者, 対象リスト[1])
+        else
+            選択index = RadioMenu作成([s.名前 for s in 対象リスト])
+            対象者 = 対象リスト[選択index]
+            return T行動(行動内容, 行動者, 対象者)
+        end
+    end
+
     while true
         選択index = RadioMenu作成(["攻撃", "スキル"])
         if 選択index == 1
-            対象リスト = get対象リスト(T通常攻撃())
-            if length(対象リスト) == 1
-                return T行動(T通常攻撃(), 行動者, 対象リスト[1])
-            else
-                選択index = RadioMenu作成([s.名前 for s in 対象リスト])
-                対象者 = 対象リスト[選択index]
-                return T行動(T通常攻撃(), 行動者, 対象者)
-            end
+            return 行動対象を選択し行動を決定(T通常攻撃())
         elseif 選択index == 2
             選択index = RadioMenu作成([s.名前 * string(s.消費MP) for s in 行動者.スキルs])
             if 行動者.MP < 行動者.スキルs[選択index].消費MP 
@@ -45,15 +49,7 @@ function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モ�
                 continue
             end
             選択スキル = 行動者.スキルs[選択index]
-
-            対象リスト = get対象リスト(選択スキル)
-            if length(対象リスト) == 1
-                return T行動(選択スキル, 行動者, 対象リスト[1])
-            else
-                選択index = RadioMenu作成([s.名前 for s in 対象リスト])
-                対象者 = 対象リスト[選択index]
-                return T行動(選択スキル, 行動者, 対象者)
-            end
+            return 行動対象を選択し行動を決定(選択スキル)
         else
             throw(DomainError("行動選択でありえない選択肢が選ばれています"))
         end
