@@ -10,7 +10,7 @@ function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モ�
     end
 
     function get対象リスト(::Tかばう行動)
-        return filter(p -> p != 行動者, プレイヤーs)
+        return filter(p -> p != 行動者 && isnothing(p.かばってくれているキャラクター), プレイヤーs)
     end
 
     function RadioMenu作成(選択肢)
