@@ -37,14 +37,14 @@ function Tプレイヤー(名前, HP, MP, 攻撃力, 防御力, スキルs)
 end
 
 function Base.getproperty(obj::Tキャラクター, sym::Symbol)
-    if sym in [:名前, :HP, :MP, :攻撃力, :防御力, :スキルs, :かばっているキャラクター,  :かばってくれているキャラクター]  #追加
+    if sym in fieldnames(Tキャラクター共通データ)
         return Base.getproperty(obj._キャラクター共通データ, sym)
     end
     return Base.getfield(obj, sym)
 end
 
 function Base.setproperty!(obj::Tキャラクター, sym::Symbol, val)
-    if sym in [:名前, :HP, :MP, :攻撃力, :防御力, :スキルs, :かばっているキャラクター,　:かばってくれているキャラクター] #追加
+    if sym in fieldnames(Tキャラクター共通データ)
         return Base.setproperty!(obj._キャラクター共通データ, sym, val)
     end
     return Base.setfield!(obj, sym, val)
