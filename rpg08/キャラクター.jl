@@ -93,3 +93,13 @@ end
 function 行動可能な奴ら(キャラクターs)
     return [c for c in キャラクターs if is行動可能(c)]
 end
+
+function is誰かをかばっている(行動者::Tキャラクター, プレイヤーs, モンスターs)
+    全キャラクターs = vcat(プレイヤーs, モンスターs)
+    for p in 全キャラクターs
+        if p.かばってくれているキャラクター == 行動者
+            return (true, p)
+        end
+    end
+    return (false, nothing)
+end
