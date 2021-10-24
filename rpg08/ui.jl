@@ -39,16 +39,18 @@ function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モ�
     end
 
     while true
-        選択index = RadioMenu作成(["攻撃", "スキル"])
-        if 選択index == 1
+        選択肢 = ["攻撃", "スキル"]
+        選択index = RadioMenu作成(選択肢)
+        選択 = 選択肢[選択index]
+        if 選択 == "攻撃"
             return 行動対象を選択し行動を決定(T通常攻撃())
-        elseif 選択index == 2
+        elseif 選択 == "スキル"
             選択index = RadioMenu作成([s.名前 * string(s.消費MP) for s in 行動者.スキルs])
-            if 行動者.MP < 行動者.スキルs[選択index].消費MP 
+            選択スキル = 行動者.スキルs[選択index]
+            if 行動者.MP < 選択スキル.消費MP 
                 println("MPが足りません")
                 continue
             end
-            選択スキル = 行動者.スキルs[選択index]
             return 行動対象を選択し行動を決定(選択スキル)
         else
             throw(DomainError("行動選択でありえない選択肢が選ばれています"))
