@@ -7,6 +7,7 @@ mutable struct Tキャラクター共通データ
     攻撃力
     防御力
     スキルs
+    かばっているキャラクター
     かばってくれているキャラクター
     Tキャラクター共通データ(名前, HP, MP, 攻撃力, 防御力, スキルs) = begin
         if HP < 0
@@ -21,7 +22,7 @@ mutable struct Tキャラクター共通データ
         if 防御力 ≤ 0
             throw(DomainError("防御力が0または負の値になっています"))
         end 
-        new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing)  
+        new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing)  
     end
 end
 
@@ -36,14 +37,14 @@ function Tプレイヤー(名前, HP, MP, 攻撃力, 防御力, スキルs)
 end
 
 function Base.getproperty(obj::Tキャラクター, sym::Symbol)
-    if sym in [:名前, :HP, :MP, :攻撃力, :防御力, :スキルs, :かばってくれているキャラクター] 
+    if sym in [:名前, :HP, :MP, :攻撃力, :防御力, :スキルs, :かばっているキャラクター,  :かばってくれているキャラクター]  #追加
         return Base.getproperty(obj._キャラクター共通データ, sym)
     end
     return Base.getfield(obj, sym)
 end
 
 function Base.setproperty!(obj::Tキャラクター, sym::Symbol, val)
-    if sym in [:名前, :HP, :MP, :攻撃力, :防御力, :スキルs, :かばってくれているキャラクター] 
+    if sym in [:名前, :HP, :MP, :攻撃力, :防御力, :スキルs, :かばっているキャラクター,　:かばってくれているキャラクター] #追加
         return Base.setproperty!(obj._キャラクター共通データ, sym, val)
     end
     return Base.setfield!(obj, sym, val)
