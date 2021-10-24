@@ -1,7 +1,11 @@
 abstract type T行動内容 end 
 abstract type Tスキル <: T行動内容　end 
 struct T通常攻撃 <: T行動内容 end
-struct Tかばう <: Tスキル end
+
+struct Tかばう <: Tスキル 
+    名前
+    消費MP
+end
 
 struct T攻撃スキル <: Tスキル
     名前
@@ -43,7 +47,7 @@ function createスキル(スキルシンボル)
     elseif スキルシンボル == :連続攻撃
         return T攻撃スキル("連続攻撃", 0.5, 1, 10, 2, 5)
     elseif スキルシンボル === :かばう
-        return Tかばう()
+        return Tかばう("かばう", 0)
     else
         Throw(DomainError("未定義のスキルが指定されました"))
     end
