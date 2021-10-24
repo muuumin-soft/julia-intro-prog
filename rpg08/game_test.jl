@@ -2,60 +2,24 @@ include("game.jl")
 
 using Test
 
-function createキャラクターHP100()
-    return Game.Tプレイヤー("", 100, 0, 1, 10, [])
+function createプレイヤー(;名前="太郎", HP=100, MP=20, 攻撃力=10, 防御力=10, スキルs=[])
+    return Game.Tプレイヤー(名前, HP, MP, 攻撃力, 防御力, スキルs)
 end
 
-function createプレイヤーHP100攻撃力10()
-    return Game.Tプレイヤー("", 100, 0, 10, 10, [])
-end
-
-function createモンスターHP200攻撃力20()
-    return Game.Tモンスター("", 200, 0, 20, 10, [])
-end
-
-function createプレイヤーHP0()
-    return Game.Tプレイヤー("", 0, 0, 1, 1, [])
-end
-
-function createプレイヤーHP1()
-    return Game.Tプレイヤー("", 1, 0, 1, 1, [])
-end
-
-function createモンスターHP0()
-    return Game.Tモンスター("", 0, 0, 1, 1, [])
-end
-
-function createモンスターHP1()
-    return Game.Tモンスター("", 1, 0, 1, 1, [])
-end
-
-function createプレイヤー()
-    return Game.Tプレイヤー("", 0, 0, 1, 1, [])
-end
-
-function createモンスター()
-    return Game.Tモンスター("", 0, 0, 1, 1, [])
-end
-
-function createプレイヤーHP(HP)
-    return Game.Tプレイヤー("", HP, 0, 1, 1, [])
-end
-
-function createモンスターHP(HP)
-    return Game.Tモンスター("", HP, 0, 1, 1, [])
+function createモンスター(;名前="ドラゴン", HP=400, MP=80, 攻撃力=20, 防御力=10, スキルs=[])
+    return Game.Tプレイヤー(名前, HP, MP, 攻撃力, 防御力, スキルs)
 end
 
 @testset "HP減少" begin
 
     @testset "ダメージ < HP" begin
-        c = createキャラクターHP100()
+        c = createプレイヤー(HP=100)
         Game.HP減少!(c, 3) #3のダメージ
         @test c.HP == 97
     end
 
     @testset "複数回ダメージ" begin
-        c = createキャラクターHP100() 
+        c = createプレイヤー(HP=100) 
         Game.HP減少!(c, 3) #3のダメージ
         @test c.HP == 97
         Game.HP減少!(c, 3) #3のダメージ
@@ -63,13 +27,13 @@ end
     end   
 
     @testset "ダメージ > HP" begin
-        c = createキャラクターHP100() 
+        c = createプレイヤー(HP=100)
         Game.HP減少!(c, 101) #101のダメージ
         @test c.HP == 0
     end
 
     @testset "ダメージ = HP" begin
-        c = createキャラクターHP100() 
+        c = createプレイヤー(HP=100)
         Game.HP減少!(c, 100) #100のダメージ
         @test c.HP == 0
     end    
@@ -77,8 +41,8 @@ end
 
 @testset "行動実行!" begin
     @testset "通常攻撃" begin
-        p = createプレイヤーHP100攻撃力10()
-        m = createモンスターHP200攻撃力20()
+        p = createプレイヤー(HP=100, 攻撃力=10)
+        m = createモンスター(HP=200, 攻撃力=20)
 
         プレイヤーからモンスターへ攻撃 = Game.T行動(Game.T通常攻撃(), p, m)
         Game.行動実行!(プレイヤーからモンスターへ攻撃)
@@ -92,8 +56,8 @@ end
     end    
 
     @testset "大振り攻撃" begin
-        p = createプレイヤーHP100攻撃力10()
-        m = createモンスターHP200攻撃力20()
+        p = createプレイヤー(HP=100, 攻撃力=10)
+        m = createモンスター(HP=200, 攻撃力=20)
 
         プレイヤーからモンスターへ攻撃 = Game.T行動(Game.createスキル(:大振り), p, m)
         Game.行動実行!(プレイヤーからモンスターへ攻撃)
@@ -107,8 +71,8 @@ end
     end 
 
     @testset "連続攻撃" begin
-        p = createプレイヤーHP100攻撃力10()
-        m = createモンスターHP200攻撃力20()
+        p = createプレイヤー(HP=100, 攻撃力=10)
+        m = createモンスター(HP=200, 攻撃力=20)
 
         プレイヤーからモンスターへ攻撃 = Game.T行動(Game.createスキル(:連続攻撃), p, m)
         Game.行動実行!(プレイヤーからモンスターへ攻撃)
@@ -123,9 +87,9 @@ end
 
     @testset "かばう" begin
         @testset "通常攻撃" begin
-            太郎 = createキャラクターHP100()
-            花子 = createキャラクターHP100()
-            ドラゴン = createモンスターHP200攻撃力20()
+            太郎 = createプレイヤー(HP=100)
+            花子 = createプレイヤー(HP=100)
+            ドラゴン = createモンスター(HP=200, 攻撃力=20)
         
             太郎が花子をかばう = Game.T行動(Game.createスキル(:かばう), 太郎, 花子)
             Game.行動実行!(太郎が花子をかばう)
@@ -143,36 +107,35 @@ end
         end
 
         @testset "連続攻撃" begin
-            太郎 = createキャラクターHP100()
-            花子 = createキャラクターHP100()
-            ドラゴン = createモンスターHP200攻撃力20()
-    
-            太郎が花子をかばう = Game.T行動(Game.createスキル(:かばう), 太郎, 花子)
-            Game.行動実行!(太郎が花子をかばう)
-    
-            ドラゴンから花子へ連続攻撃 = Game.T行動(Game.createスキル(:連続攻撃), ドラゴン, 花子)
-            Game.行動実行!(ドラゴンから花子へ連続攻撃)
-            @test 花子.HP == 100
-            @test 100 - 10 * 5 <= 太郎.HP <= 100 - 10 * 2
-    
-            Game.行動前処理!(太郎, [花子], [ドラゴン]) #「かばう」が解除される
-    
-            Game.行動実行!(ドラゴンから花子へ連続攻撃)
-            @test 100 - 10 * 5 <= 花子.HP <= 100 - 10 * 2
-            @test 100 - 10 * 5 <= 太郎.HP <= 100 - 10 * 2
-        end
+            プレイヤーHP = 100
+            プレイヤー攻撃力 = 10
+            p = createプレイヤー(HP=プレイヤーHP, 攻撃力=プレイヤー攻撃力)
+            モンスターHP = 200
+            モンスター攻撃力 = 20
+            m = createモンスター(HP=モンスターHP, 攻撃力=モンスター攻撃力)
+        
+            プレイヤーからモンスターへ攻撃 = Game.T行動(Game.createスキル(:連続攻撃), p, m)
+            Game.行動実行!(プレイヤーからモンスターへ攻撃)
+            @test p.HP == プレイヤーHP
+            @test モンスターHP - プレイヤー攻撃力/2 * 5 ≤ m.HP ≤ モンスターHP - プレイヤー攻撃力/2 * 2 
+        
+            モンスターからプレイヤーへ攻撃 = Game.T行動(Game.createスキル(:連続攻撃), m, p)
+            Game.行動実行!(モンスターからプレイヤーへ攻撃)
+            @test プレイヤーHP - モンスター攻撃力/2 * 5 <= p.HP <= プレイヤーHP - モンスター攻撃力/2 * 2 
+            @test モンスターHP - プレイヤー攻撃力/2 * 5 ≤ m.HP ≤ モンスターHP - プレイヤー攻撃力/2 * 2 
+        end 
     end 
 end
 
 @testset "is戦闘終了" begin
     @testset begin
-        @test Game.is戦闘終了([createプレイヤーHP1()], [createモンスターHP1()]) == false
-        @test Game.is戦闘終了([createプレイヤーHP1()], [createモンスターHP0()]) == true
-        @test Game.is戦闘終了([createプレイヤーHP0()], [createモンスターHP1()]) == true
-        @test Game.is戦闘終了([createプレイヤーHP0(), createプレイヤーHP1()], [createモンスターHP1()]) == false
-        @test Game.is戦闘終了([createプレイヤーHP0(), createプレイヤーHP0()], [createモンスターHP1()]) == true
-        @test Game.is戦闘終了([createプレイヤーHP1()], [createモンスターHP0(), createモンスターHP1()]) == false
-        @test Game.is戦闘終了([createプレイヤーHP1()], [createモンスターHP0(), createモンスターHP0()]) == true
+        @test Game.is戦闘終了([createプレイヤー(HP=1)], [createモンスター(HP=1)]) == false
+        @test Game.is戦闘終了([createプレイヤー(HP=1)], [createモンスター(HP=0)]) == true
+        @test Game.is戦闘終了([createプレイヤー(HP=0)], [createモンスター(HP=1)]) == true
+        @test Game.is戦闘終了([createプレイヤー(HP=0), createプレイヤー(HP=1)], [createモンスター(HP=1)]) == false
+        @test Game.is戦闘終了([createプレイヤー(HP=0), createプレイヤー(HP=0)], [createモンスター(HP=1)]) == true
+        @test Game.is戦闘終了([createプレイヤー(HP=1)], [createモンスター(HP=0), createモンスター(HP=1)]) == false
+        @test Game.is戦闘終了([createプレイヤー(HP=1)], [createモンスター(HP=0), createモンスター(HP=0)]) == true
     end
 end
 
@@ -233,43 +196,43 @@ end
 
 @testset "is戦闘終了" begin
     @testset "1vs1 両者生存" begin
-        p = createプレイヤーHP1()
-        m = createモンスターHP1()
+        p = createプレイヤー(HP=1)
+        m = createモンスター(HP=1)
         @test Game.is戦闘終了([p], [m]) == false
     end
 
     @testset "1vs1 プレイヤー死亡" begin
-        p = createプレイヤーHP0()
-        m = createモンスターHP1()
+        p = createプレイヤー(HP=0)
+        m = createモンスター(HP=1)
         @test Game.is戦闘終了([p], [m]) == true
     end
 end
 
 
 @testset "is行動可能" begin
-    p = createプレイヤーHP1()
+    p = createプレイヤー(HP=1)
     @test Game.is行動可能(p) == true
-    p = createプレイヤーHP0()
+    p = createプレイヤー(HP=0)
     @test Game.is行動可能(p) == false
-    m = createモンスターHP1()
+    m = createモンスター(HP=1)
     @test Game.is行動可能(m) == true
-    m = createモンスターHP0()
+    m = createモンスター(HP=0)
     @test Game.is行動可能(m) == false
 end
 
 @testset "行動可能な奴ら" begin
-    p1 = createプレイヤーHP1()
+    p1 = createプレイヤー(HP=1)
     @test Game.行動可能な奴ら([p1]) == [p1]
-    p2 = createプレイヤーHP0()
+    p2 = createプレイヤー(HP=0)
     @test Game.行動可能な奴ら([p1, p2]) == [p1]
-    p3 = createプレイヤーHP1()
+    p3 = createプレイヤー(HP=1)
     @test Game.行動可能な奴ら([p1, p2, p3]) == [p1, p3]
 
-    m1 = createモンスターHP1()
+    m1 = createモンスター(HP=1)
     @test Game.行動可能な奴ら([p1, p2, p3, m1]) == [p1, p3, m1]
-    m2 = createモンスターHP0()
+    m2 = createモンスター(HP=0)
     @test Game.行動可能な奴ら([p1, p2, p3, m1, m2]) == [p1, p3, m1]
-    m3 = createモンスターHP1()
+    m3 = createモンスター(HP=1)
     @test Game.行動可能な奴ら([p1, p2, p3, m1, m2, m3]) == [p1, p3, m1, m3]
 end
 
