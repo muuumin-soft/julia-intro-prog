@@ -13,52 +13,44 @@ function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モ�
         return プレイヤーs
     end
 
-    while true
-        選択肢 = RadioMenu(["攻撃", "スキル"], pagesize=4)
-        選択index = request("行動を選択してください:", 選択肢)
-
-        if 選択index == -1
-            println("正しいコマンドを入力してください")
-            continue
+    function RadioMenu作成(選択肢)
+        while true
+            r = RadioMenu(選択肢, pagesize=4)
+            選択index = request("選択してください:", r)
+    
+            if 選択index == -1
+                println("正しいコマンドを入力してください")
+                continue
+            else
+                return 選択index
+            end
         end
-
+    end
+    
+    while true
+        選択index = RadioMenu作成(["攻撃", "スキル"])
         if 選択index == 1
             対象リスト = get対象リスト(T通常攻撃())
             if length(対象リスト) == 1
                 return T行動(T通常攻撃(), 行動者, 対象リスト[1])
             else
-                選択肢 = RadioMenu([s.名前 for s in 対象リスト], pagesize=4)
-                選択index = request("誰を対象にしますか?:", 選択肢)
-                if 選択index == -1
-                    println("正しいコマンドを入力してください")
-                    continue
-                end
+                選択index = RadioMenu作成([s.名前 for s in 対象リスト])
                 対象者 = 対象リスト[選択index]
                 return T行動(T通常攻撃(), 行動者, 対象者)
             end
         elseif 選択index == 2
-            選択肢 = RadioMenu([s.名前 * string(s.消費MP) for s in 行動者.スキルs], pagesize=4)
-            選択index = request("スキルを選択してください:", 選択肢)
-            if 選択index == -1
-                println("正しいコマンドを入力してください")
-                continue
-            end
+            選択index = RadioMenu作成([s.名前 * string(s.消費MP) for s in 行動者.スキルs])
             if 行動者.MP < 行動者.スキルs[選択index].消費MP 
                 println("MPが足りません")
                 continue
             end
-
             選択スキル = 行動者.スキルs[選択index]
+
             対象リスト = get対象リスト(選択スキル)
             if length(対象リスト) == 1
                 return T行動(選択スキル, 行動者, 対象リスト[1])
             else
-                選択肢 = RadioMenu([s.名前 for s in 対象リスト], pagesize=4)
-                選択index = request("誰を対象にしますか?:", 選択肢)
-                if 選択index == -1
-                    println("正しいコマンドを入力してください")
-                    continue
-                end
+                選択index = RadioMenu作成([s.名前 for s in 対象リスト])
                 対象者 = 対象リスト[選択index]
                 return T行動(選択スキル, 行動者, 対象者)
             end
