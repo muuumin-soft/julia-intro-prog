@@ -9,6 +9,8 @@ mutable struct Tキャラクター共通データ
     スキルs
     かばっているキャラクター
     かばってくれているキャラクター
+    行動前処理イベントリスナーs
+    戦闘不能イベントリスナーs
     Tキャラクター共通データ(名前, HP, MP, 攻撃力, 防御力, スキルs) = begin
         if HP < 0
             throw(DomainError("HPが負の値になっています"))
@@ -22,7 +24,7 @@ mutable struct Tキャラクター共通データ
         if 防御力 ≤ 0
             throw(DomainError("防御力が0または負の値になっています"))
         end 
-        new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing)  
+        new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing, [かばう解除!], [かばう解除!])  
     end
 end
 
@@ -58,13 +60,19 @@ function Tモンスター(名前, HP, MP, 攻撃力, 防御力, スキルs)
     return Tモンスター(Tキャラクター共通データ(名前, HP, MP, 攻撃力, 防御力, スキルs))    
 end
 
+function 戦闘不能処理イベント通知!(防御者::Tキャラクター)
+    for リスナー in 防御者.戦闘不能イベントリスナーs
+        リスナー(防御者)
+    end
+end
+
 function HP減少!(防御者, ダメージ)
     if ダメージ < 0
         throw(DomainError("ダメージがマイナスです"))
     end
     if 防御者.HP - ダメージ　≤ 0
         防御者.HP = 0
-        かばう解除!(防御者)
+        戦闘不能処理イベント通知!(防御者)
     else
         防御者.HP = 防御者.HP - ダメージ
     end
