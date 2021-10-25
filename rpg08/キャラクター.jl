@@ -62,8 +62,9 @@ function HP減少!(防御者, ダメージ)
     if ダメージ < 0
         throw(DomainError("ダメージがマイナスです"))
     end
-    if 防御者.HP - ダメージ　< 0
+    if 防御者.HP - ダメージ　≤ 0
         防御者.HP = 0
+        かばう解除!(防御者)
     else
         防御者.HP = 防御者.HP - ダメージ
     end
