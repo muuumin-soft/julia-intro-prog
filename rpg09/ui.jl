@@ -99,3 +99,7 @@ function HP減少ui処理!(防御者, 防御者ダメージ)
     println("$(防御者.名前)は$(防御者ダメージ)のダメージを受けた！")
     println("$(防御者.名前)の残りHP：$(防御者.HP)")
 end
+
+function 攻撃失敗ui処理!()
+    println("攻撃は失敗した・・・")
+end
