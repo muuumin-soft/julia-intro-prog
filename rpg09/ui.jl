@@ -72,6 +72,11 @@ function 戦況表示(プレイヤーs, モンスターs)
     return join(結果, "\n")
 end
 
+function 攻撃実行ui処理!(攻撃者, コマンド::T通常攻撃)
+    println("----------")
+    println("$(攻撃者.名前)の攻撃！")        
+end
+
 function かばう実行ui処理!(行動者, 対象者)
     println("----------")
     println("$(行動者.名前)は$(対象者.名前)を身を呈して守る構えをとった！")        
