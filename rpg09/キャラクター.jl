@@ -11,6 +11,7 @@ mutable struct Tキャラクター共通データ
     かばってくれているキャラクター
     行動前処理イベントリスナーs
     戦闘不能イベントリスナーs
+    かばう実行イベントリスナーs
     Tキャラクター共通データ(名前, HP, MP, 攻撃力, 防御力, スキルs) = begin
         if HP < 0
             throw(DomainError("HPが負の値になっています"))
@@ -24,9 +25,16 @@ mutable struct Tキャラクター共通データ
         if 防御力 ≤ 0
             throw(DomainError("防御力が0または負の値になっています"))
         end 
-        new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing, [かばう解除!], [かばう解除!])  
+        new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing, [かばう解除!], [かばう解除!], [かばう実行ui処理!])  
     end
 end
+
+function かばう実行イベント通知!(行動者, 対象者)
+    for リスナー in 行動者.かばう実行イベントリスナーs
+        リスナー(行動者, 対象者)
+    end
+end
+
 
 abstract type Tキャラクター end
 
