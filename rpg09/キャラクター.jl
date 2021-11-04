@@ -26,7 +26,9 @@ mutable struct Tキャラクター共通データ
         if 防御力 ≤ 0
             throw(DomainError("防御力が0または負の値になっています"))
         end 
-        new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing, [かばう解除!], [かばう解除!], [かばう実行ui処理!], [かばう解除ui処理!])  
+        new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing, 
+            [かばう解除!], [かばう解除!], 
+            [かばう実行ui処理!], [かばう解除ui処理!])
     end
 end
 
