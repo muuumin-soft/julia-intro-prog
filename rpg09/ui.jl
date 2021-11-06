@@ -108,3 +108,8 @@ function 行動決定ui処理!(行動者::Tプレイヤー, プレイヤーs, �
     println(戦況表示(プレイヤーs, モンスターs))
     println("$(行動者.名前)のターン")
 end
+
+function モンスター遭遇イベントui処理!()
+    println("モンスターに遭遇した！")
+    println("戦闘開始！")
+end
