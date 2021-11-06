@@ -113,3 +113,7 @@ function モンスター遭遇イベントui処理!()
     println("モンスターに遭遇した！")
     println("戦闘開始！")
 end
+
+function 戦闘勝利イベントui処理!()
+    println("戦闘に勝利した！")
+end
