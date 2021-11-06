@@ -9,6 +9,10 @@ function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モ�
         return モンスターs
     end
 
+    function get対象リスト(::T回復系行動)
+        return プレイヤーs
+    end
+
     function get対象リスト(::Tかばう行動)
         return filter(p -> p != 行動者 && isnothing(p.かばってくれているキャラクター), プレイヤーs)
     end
@@ -77,9 +81,17 @@ function 攻撃実行ui処理!(攻撃者, コマンド::T通常攻撃)
     println("$(攻撃者.名前)の攻撃！")        
 end
 
-function 攻撃実行ui処理!(攻撃者, スキル::Tスキル)
+function 攻撃実行ui処理!(行動者, スキル::Tスキル)
+    スキル実行ui処理!(行動者, スキル)
+end
+
+function 回復実行ui処理!(行動者, スキル::Tスキル)
+    スキル実行ui処理!(行動者, スキル)
+end
+
+function スキル実行ui処理!(行動者, スキル::Tスキル)
     println("----------")
-    println("$(攻撃者.名前)の$(スキル.名前)！")
+    println("$(行動者.名前)の$(スキル.名前)！")
 end
 
 function かばう実行ui処理!(行動者, 対象者)
@@ -104,6 +116,11 @@ end
 function HP減少ui処理!(防御者, 防御者ダメージ)
     println("$(防御者.名前)は$(防御者ダメージ)のダメージを受けた！")
     println("$(防御者.名前)の残りHP：$(防御者.HP)")
+end
+
+function HP回復ui処理!(対象者, 回復量)
+    println("$(対象者.名前)のHPが$(回復量)回復した！")
+    println("$(対象者.名前)の残りHP：$(対象者.HP)")
 end
 
 function 攻撃失敗ui処理!()

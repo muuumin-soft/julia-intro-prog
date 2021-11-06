@@ -41,6 +41,21 @@ function T攻撃スキル(名前, 威力, 命中率, 消費MP)
     return T攻撃スキル(名前, 威力, 命中率, 消費MP, 1, 1)
 end
 
+struct T回復スキル <: Tスキル
+    名前
+    回復割合
+    消費MP
+    T回復スキル(名前, 回復割合, 消費MP) = begin
+        if !(0 ≤ 回復割合 ≤ 1)
+            throw(DomainError("回復割合は0から1の間でなければなりません"))
+        end        
+        if 消費MP < 0
+            throw(DomainError("消費MPが負の値になっています"))
+        end 
+        new(名前, 回復割合, 消費MP)
+    end
+end
+
 function createスキル(スキルシンボル)
     if スキルシンボル == :大振り
         return T攻撃スキル("大振り", 2, 0.4, 0)
@@ -48,6 +63,8 @@ function createスキル(スキルシンボル)
         return T攻撃スキル("連続攻撃", 0.5, 1, 10, 2, 5)
     elseif スキルシンボル === :かばう
         return Tかばう("かばう", 0)
+    elseif スキルシンボル === :ヒール
+        return T回復スキル("ヒール", 0.5, 10)
     else
         Throw(DomainError("未定義のスキルが指定されました"))
     end
