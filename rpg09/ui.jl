@@ -117,3 +117,7 @@ end
 function 戦闘勝利イベントui処理!()
     println("戦闘に勝利した！")
 end
+
+function 戦闘敗北イベントui処理!()
+    println("戦闘に敗北した・・・")
+end
