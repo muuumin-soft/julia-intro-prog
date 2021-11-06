@@ -197,6 +197,30 @@ end
             @test 太郎.HP == 0
         end
     end 
+
+    @testset "ヒール" begin
+        @testset "偶数：最大HP以内" begin
+            p = createプレイヤー(HP=100)
+            Game.HP減少!(p, 51)
+            ヒールで回復 = Game.T行動(Game.createスキル(:ヒール), p, p)
+            Game.行動実行!(ヒールで回復)
+            @test p.HP == 100 - 51 + 50                
+        end
+        @testset "奇数：最大HP以内" begin
+            p = createプレイヤー(HP=99)
+            Game.HP減少!(p, 51)
+            ヒールで回復 = Game.T行動(Game.createスキル(:ヒール), p, p)
+            Game.行動実行!(ヒールで回復)
+            @test p.HP == 99 - 51 + 49             
+        end
+        @testset "最大HPまで" begin
+            p = createプレイヤー(HP=100)
+            Game.HP減少!(p, 49)
+            ヒールで回復 = Game.T行動(Game.createスキル(:ヒール), p, p)
+            Game.行動実行!(ヒールで回復)
+            @test p.HP == 100                
+        end
+    end 
 end
 
 @testset "is戦闘終了" begin
