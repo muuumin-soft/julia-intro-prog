@@ -103,3 +103,8 @@ end
 function 攻撃失敗ui処理!()
     println("攻撃は失敗した・・・")
 end
+
+function 行動決定ui処理!(行動者::Tプレイヤー, プレイヤーs, モンスターs)
+    println(戦況表示(プレイヤーs, モンスターs))
+    println("$(行動者.名前)のターン")
+end

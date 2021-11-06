@@ -17,6 +17,7 @@ mutable struct Tキャラクター共通データ
     かばう解除イベントリスナーs
     HP減少イベントリスナーs
     攻撃失敗イベントリスナーs
+    行動決定イベントリスナーs
     Tキャラクター共通データ(名前, HP, MP, 攻撃力, 防御力, スキルs) = begin
         if HP < 0
             throw(DomainError("HPが負の値になっています"))
@@ -33,7 +34,7 @@ mutable struct Tキャラクター共通データ
         new(名前, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing, 
             [かばう解除!], [かばう解除!], [攻撃実行ui処理!],
             [かばう実行ui処理!], [かばう発動ui処理!], [かばう解除ui処理!],
-            [HP減少ui処理!], [攻撃失敗ui処理!])
+            [HP減少ui処理!], [攻撃失敗ui処理!], [行動決定ui処理!])
     end
 end
 
@@ -147,4 +148,10 @@ end
 
 function 行動可能な奴ら(キャラクターs)
     return [c for c in キャラクターs if is行動可能(c)]
+end
+
+function 行動決定イベント通知!(行動者::Tプレイヤー, プレイヤーs, モンスターs)
+    for リスナー in 行動者.行動決定イベントリスナーs
+        リスナー(行動者, プレイヤーs, モンスターs)
+    end
 end
