@@ -2,6 +2,7 @@ using Random
 import REPL
 using REPL.TerminalMenus
 
+include("スキル.jl")
 include("キャラクター.jl")
 include("戦闘.jl")
 
