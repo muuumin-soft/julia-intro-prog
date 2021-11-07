@@ -6,7 +6,6 @@ using REPL.TerminalMenus
 
 include("キャラクター.jl")
 include("戦闘.jl")
-include("ui.jl")
 
 function モンスター遭遇イベント通知!(リスナーs)
     for リスナー in リスナーs

@@ -1,3 +1,4 @@
+include("ui.jl")
 include("game.jl")
 
 using Test
