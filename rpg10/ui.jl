@@ -1,4 +1,6 @@
+include("T行動内容.jl")
 include("行動系統.jl")
+include("Tキャラクター.jl")
 
 function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モンスターs)
     function get対象リスト(スキル::T行動内容)
