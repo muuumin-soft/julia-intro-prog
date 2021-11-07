@@ -199,6 +199,14 @@ end
             @test 花子.HP == 80
             @test 太郎.HP == 0
         end
+
+        @testset "想定外のシンボルでは例外が発生" begin
+            p1 = createプレイヤー()
+            p2 = createプレイヤー()
+            @test isnothing(かばう解除ui処理!(p1, p2, :行動前処理))
+            @test isnothing(かばう解除ui処理!(p1, p2, :戦闘不能))
+            @test_throws DomainError かばう解除ui処理!(p1, p2, :想定外シンボル)
+        end
     end 
 
     @testset "ヒール" begin
