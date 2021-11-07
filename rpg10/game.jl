@@ -1,5 +1,3 @@
-module Game
-
 using Random
 import REPL
 using REPL.TerminalMenus
@@ -41,6 +39,4 @@ function main()
     else
         戦闘敗北イベント通知!([戦闘敗北イベントui処理!])
     end
-end
-
 end
