@@ -19,6 +19,10 @@ function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モ�
         return filter(p -> p != 行動者 && isnothing(p.かばってくれているキャラクター), プレイヤーs)
     end
 
+    function get対象リスト(::T刃に毒を塗る行動)
+        return [行動者]
+    end
+
     function RadioMenu作成(選択肢)
         while true
             r = RadioMenu(選択肢, pagesize=4)
