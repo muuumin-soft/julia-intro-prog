@@ -232,6 +232,15 @@ end
             @test p.HP == 100                
         end
     end 
+
+    @testset "刃に毒を塗る" begin
+        @testset "刃に毒を塗る実行" begin
+            p = createプレイヤー()
+            刃に毒を塗る = T行動(createスキル(:刃に毒を塗る), p, p)
+            行動実行!(刃に毒を塗る)
+            @test p.物理攻撃時状態異常付与確率[:毒] == 0.25    
+        end
+    end 
 end
 
 @testset "is戦闘終了" begin
