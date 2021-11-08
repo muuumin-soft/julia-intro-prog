@@ -51,3 +51,8 @@ struct T回復スキル <: Tスキル
         new(名前, 回復割合, 消費MP)
     end
 end
+
+struct T刃に毒を塗る <: Tスキル 
+    名前
+    消費MP
+end

@@ -4,6 +4,10 @@ function T攻撃スキル(名前, 威力, 命中率, 消費MP)
     return T攻撃スキル(名前, 威力, 命中率, 消費MP, 1, 1)
 end
 
+function T刃に毒を塗る() 
+    return T刃に毒を塗る("刃に毒を塗る", 5)
+end
+
 function createスキル(スキルシンボル)
     if スキルシンボル == :大振り
         return T攻撃スキル("大振り", 2, 0.4, 0)
@@ -13,6 +17,8 @@ function createスキル(スキルシンボル)
         return Tかばう("かばう", 0)
     elseif スキルシンボル === :ヒール
         return T回復スキル("ヒール", 0.5, 10)
+    elseif スキルシンボル === :刃に毒を塗る
+        return T刃に毒を塗る()
     else
         Throw(DomainError("未定義のスキルが指定されました"))
     end
