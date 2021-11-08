@@ -148,3 +148,7 @@ end
 function 戦闘敗北イベントui処理!()
     println("戦闘に敗北した・・・")
 end
+
+function 刃に毒を塗る実行ui処理!(対象者)
+    println("$(対象者.名前)は刃に毒を塗った！")
+end
