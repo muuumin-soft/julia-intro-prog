@@ -5,6 +5,7 @@ mutable struct Tキャラクター共通データ
     MP
     攻撃力
     防御力
+    物理攻撃時状態異常付与確率
     スキルs
     かばっているキャラクター
     かばってくれているキャラクター
@@ -32,7 +33,7 @@ mutable struct Tキャラクター共通データ
         if 防御力 ≤ 0
             throw(DomainError("防御力が0または負の値になっています"))
         end 
-        new(名前, HP, HP, MP, 攻撃力, 防御力, スキルs, nothing, nothing, 
+        new(名前, HP, HP, MP, 攻撃力, 防御力, Dict(), スキルs, nothing, nothing, 
             [getかばう解除!(:行動前処理)], [getかばう解除!(:戦闘不能)], [攻撃実行ui処理!],[回復実行ui処理!],
             [かばう実行ui処理!], [かばう発動ui処理!], [かばう解除ui処理!],
             [HP減少ui処理!], [HP回復ui処理!], [攻撃失敗ui処理!], [行動決定ui処理!])
