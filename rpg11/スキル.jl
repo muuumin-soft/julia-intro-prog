@@ -37,9 +37,25 @@ end
 function 毒ダメージ発生!(対象者)
     if :毒 in 対象者.状態異常s
         毒ダメージ発生イベント通知!(対象者)
-        毒ダメージ = round(Int, 対象者.最大HP * 0.2, RoundDown) 
+        毒ダメージ = 毒ダメージ計算(対象者)
         HP減少!(対象者, 毒ダメージ)
     end
+end
+
+function 毒ダメージ計算(対象者)
+    function 係数(対象者::Tプレイヤー)
+        return 0.2
+    end
+
+    function 係数(対象者::Tモンスター)
+        if 対象者.isボス
+            return 0.2
+        else
+            return 0.5
+        end
+    end
+
+    round(Int, 対象者.最大HP * 係数(対象者), RoundDown) 
 end
 
 function かばうデータ整合性チェック(キャラクター)

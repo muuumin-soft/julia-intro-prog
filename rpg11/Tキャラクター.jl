@@ -55,6 +55,7 @@ end
 
 mutable struct Tモンスター <: Tキャラクター
     _キャラクター共通データ::Tキャラクター共通データ
+    isボス
 end
 
 function getかばう解除!(かばう解除トリガ)

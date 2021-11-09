@@ -19,8 +19,8 @@ function Base.setproperty!(obj::Tキャラクター, sym::Symbol, val)
     return Base.setfield!(obj, sym, val)
 end
 
-function Tモンスター(名前, HP, MP, 攻撃力, 防御力, スキルs)
-    return Tモンスター(Tキャラクター共通データ(名前, HP, MP, 攻撃力, 防御力, スキルs))    
+function Tモンスター(名前, HP, MP, 攻撃力, 防御力, スキルs, isボス)
+    return Tモンスター(Tキャラクター共通データ(名前, HP, MP, 攻撃力, 防御力, スキルs), isボス)    
 end
 
 function HP減少!(防御者, ダメージ)
