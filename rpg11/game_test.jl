@@ -301,6 +301,18 @@ end
                 @test isempty(m.状態異常s)
             end
         end
+
+        @testset "刃に毒を塗ってからスキル攻撃実行" begin
+            p = createプレイヤー()
+            刃に毒を塗る = T行動(createスキル(:刃に毒を塗る), p, p)
+            行動実行!(刃に毒を塗る, get乱数生成器())
+        
+            乱数生成器 = get乱数生成器stub()
+            m = createモンスター()
+            プレイヤーからモンスターへ攻撃 = T行動(createスキル(:連続攻撃), p, m)
+            行動実行!(プレイヤーからモンスターへ攻撃, 乱数生成器)
+            @test :毒 in m.状態異常s
+        end
     end     
 end
 
