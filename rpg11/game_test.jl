@@ -333,6 +333,12 @@ end
                 行動後処理!(m, nothing, nothing)
                 @test m.HP == 100 - 50
             end
+            @testset "プレイヤー：20%ダメージ" begin
+                p = createプレイヤー(HP=100)
+                状態異常付与!(p, :毒)
+                行動後処理!(p, nothing, nothing)
+                @test p.HP == 100 - 20
+            end
         end 
     end     
 end
