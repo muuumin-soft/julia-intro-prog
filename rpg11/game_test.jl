@@ -319,6 +319,15 @@ end
             行動実行!(プレイヤーからモンスターへ攻撃, 乱数生成器)
             @test :毒 in m.状態異常s
         end
+
+        @testset "毒ダメージ" begin
+            @testset "20%ダメージ" begin
+                m = createモンスター(HP=100)
+                状態異常付与!(m, :毒)
+                行動後処理!(m, nothing, nothing)
+                @test m.HP == 100 - 20
+            end
+        end 
     end     
 end
 
