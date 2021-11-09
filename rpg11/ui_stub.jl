@@ -5,6 +5,7 @@ function 攻撃実行ui処理!(攻撃者, コマンド::T通常攻撃) end
 function 攻撃実行ui処理!(行動者, スキル::Tスキル) end
 function 回復実行ui処理!(行動者, スキル::Tスキル) end
 function スキル実行ui処理!(行動者, スキル::Tスキル) end
+function 状態異常付与ui処理!(対象者, 状態異常) end
 function かばう実行ui処理!(行動者, 対象者) end
 function かばう発動ui処理!(防御者) end
 function かばう解除ui処理_行動前処理!(行動者, 対象者) end
