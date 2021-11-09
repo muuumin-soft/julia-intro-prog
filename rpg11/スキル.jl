@@ -1,4 +1,5 @@
 include("T行動内容.jl")
+include("モンスターヒエラルキー.jl")
 
 function T攻撃スキル(名前, 威力, 命中率, 消費MP) 
     return T攻撃スキル(名前, 威力, 命中率, 消費MP, 1, 1)
@@ -43,17 +44,10 @@ function 毒ダメージ発生!(対象者)
 end
 
 function 毒ダメージ計算(対象者)
-    function 係数(対象者::Tプレイヤー)
-        return 0.2
-    end
-
-    function 係数(対象者::Tモンスター)
-        if 対象者.isボス
-            return 0.2
-        else
-            return 0.5
-        end
-    end
+    係数(::Tプレイヤー) = 0.2
+    係数(対象者::Tモンスター) = 係数(モンスターヒエラルキー(対象者))
+    係数(::Tボスモンスター) = 0.2
+    係数(::Tザコモンスター) = 0.5
 
     round(Int, 対象者.最大HP * 係数(対象者), RoundDown) 
 end
