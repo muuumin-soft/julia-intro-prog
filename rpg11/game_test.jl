@@ -287,6 +287,20 @@ end
                 @test isempty(m.状態異常s)
             end    
         end
+
+        @testset "刃に毒を塗ってから通常攻撃実行するもダメージ0" begin
+            p = createプレイヤー(攻撃力=0)
+            刃に毒を塗る = T行動(createスキル(:刃に毒を塗る), p, p)
+            行動実行!(刃に毒を塗る, get乱数生成器())
+        
+            乱数生成器 = get乱数生成器stub()
+            for i in 1:10 #ダメージ0なので毒にできない
+                m = createモンスター()
+                プレイヤーからモンスターへ攻撃 = T行動(T通常攻撃(), p, m)
+                行動実行!(プレイヤーからモンスターへ攻撃, 乱数生成器)
+                @test isempty(m.状態異常s)
+            end
+        end
     end     
 end
 
