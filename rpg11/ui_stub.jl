@@ -15,3 +15,4 @@ function HP回復ui処理!(対象者, 回復量) end
 function 攻撃失敗ui処理!() end
 function 行動決定ui処理!(行動者::Tプレイヤー, プレイヤーs, モンスターs) end
 function 刃に毒を塗る実行ui処理!(対象者) end
+function 毒ダメージ発生ui処理!(対象者) end

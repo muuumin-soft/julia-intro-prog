@@ -36,6 +36,7 @@ end
 
 function 毒ダメージ発生!(対象者)
     if :毒 in 対象者.状態異常s
+        毒ダメージ発生イベント通知!(対象者)
         毒ダメージ = round(Int, 対象者.最大HP * 0.2, RoundDown) 
         HP減少!(対象者, 毒ダメージ)
     end

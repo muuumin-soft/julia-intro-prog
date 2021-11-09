@@ -167,3 +167,7 @@ end
 function 刃に毒を塗る実行ui処理!(対象者)
     println("$(対象者.名前)は刃に毒を塗った！")
 end
+
+function 毒ダメージ発生ui処理!(対象者)
+    println("$(対象者.名前)は毒に苦しんでいる！")
+end
