@@ -5,6 +5,7 @@ include("Tキャラクター.jl")
 struct 描画ツール
     画面更新
     現在表示行数加算
+    ページサイズ
 end
 
 function create描画ツール()
@@ -36,10 +37,11 @@ function create描画ツール()
         現在表示行数 += 行数
     end
 
-    return 描画ツール(画面更新, 現在表示行数加算)
+    ページサイズ = 4
+    return 描画ツール(画面更新, 現在表示行数加算, ページサイズ)
 end
 
-function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モンスターs)
+function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モンスターs, 描画ツール)
     function get対象リスト(スキル::T行動内容)
         get対象リスト(行動系統(スキル))
     end
@@ -60,13 +62,25 @@ function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モ�
         return [行動者]
     end
 
+    function 表示行数取得(選択肢)
+        if length(選択肢) < 描画ツール.ページサイズ
+            return length(選択肢)
+        else
+            return 描画ツール.ページサイズ
+        end
+    end
+
     function RadioMenu作成(選択肢)
         while true
-            r = RadioMenu(選択肢, pagesize=4)
+            r = RadioMenu(選択肢, pagesize=描画ツール.ページサイズ)
             選択index = request("選択してください:", r)
-    
+            
+            画面表示行数 = 表示行数取得(選択肢) + 1 #1は"選択してください:"の行
+            描画ツール.現在表示行数加算(画面表示行数) #RadioMenuでの表示行数
+
             if 選択index == -1
                 println("正しいコマンドを入力してください")
+                描画ツール.現在表示行数加算(1) #"正しいコマンドを入力してください"を消すため
                 continue
             else
                 return 選択index
@@ -184,9 +198,10 @@ function 攻撃失敗ui処理!()
     println("攻撃は失敗した・・・")
 end
 
-function 行動決定ui処理!(行動者::Tプレイヤー, プレイヤーs, モンスターs)
-    println(戦況表示(プレイヤーs, モンスターs))
-    println("$(行動者.名前)のターン")
+function 行動決定ui処理!(行動者::Tプレイヤー, プレイヤーs, モンスターs, 描画ツール)
+    表示文字列リスト = [戦況表示(プレイヤーs, モンスターs)
+                    ;"$(行動者.名前)のターン"]
+    描画ツール.画面更新(表示文字列リスト)
 end
 
 function モンスター遭遇イベントui処理!(描画ツール)
