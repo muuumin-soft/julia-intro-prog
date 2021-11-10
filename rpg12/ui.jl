@@ -2,6 +2,32 @@ include("T行動内容.jl")
 include("行動系統.jl")
 include("Tキャラクター.jl")
 
+function create画面更新関数()
+    現在表示行数 = 0
+
+    function 画面更新(表示文字列リスト)
+        function 消去(行数)
+            if 行数 == 0 
+                return
+            end
+            
+            print("\x1b[2K") #現在カーソルのある行の文字を消去
+            for i in 1:行数+1 #+1はreadlineが作る改行を消すためのもの
+                print("\x1b[1F") #カーソルを1行上の先頭に移動
+                print("\x1b[2K") #現在カーソルのある行の文字を消去
+            end
+        end     
+
+        消去(現在表示行数)
+        表示文字列リスト = [表示文字列リスト;">>>"] #ユーザーにキー入力を促すための">>>"
+        for 文字列 in 表示文字列リスト
+            println(文字列)
+        end
+        現在表示行数 = length(表示文字列リスト)
+        readline()
+    end
+end
+
 function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モンスターs)
     function get対象リスト(スキル::T行動内容)
         get対象リスト(行動系統(スキル))
