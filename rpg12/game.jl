@@ -6,6 +6,31 @@ include("スキル.jl")
 include("キャラクター.jl")
 include("戦闘.jl")
 
+function create画面更新関数()
+    現在表示行数 = 0
+
+    function 画面更新(表示文字列リスト)
+        function 消去(行数)
+            if 行数 == 0 
+                return
+            end
+            
+            print("\x1b[2K") #現在カーソルのある行の文字を消去
+            for i in 1:行数+1 #+1はreadlineが作る改行を消すためのもの
+                print("\x1b[1F") #カーソルを1行上の先頭に移動
+                print("\x1b[2K") #現在カーソルのある行の文字を消去
+            end
+        end     
+
+        消去(現在表示行数)
+        for 文字列 in 表示文字列リスト
+            println(文字列)
+        end
+        現在表示行数 = length(表示文字列リスト)
+        readline()
+    end
+end
+
 function モンスター遭遇イベント通知!(リスナーs)
     for リスナー in リスナーs
         リスナー()
