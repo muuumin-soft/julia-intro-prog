@@ -7,7 +7,7 @@ struct 描画ツール
     現在表示行数加算
 end
 
-function create画面更新関数()
+function create描画ツール()
     現在表示行数 = 0
 
     function 画面更新(表示文字列リスト)
