@@ -2,6 +2,11 @@ include("T行動内容.jl")
 include("行動系統.jl")
 include("Tキャラクター.jl")
 
+struct 描画ツール
+    画面更新
+    現在表示行数加算
+end
+
 function create画面更新関数()
     現在表示行数 = 0
 
@@ -26,6 +31,12 @@ function create画面更新関数()
         現在表示行数 = length(表示文字列リスト)
         readline()
     end
+
+    function 現在表示行数加算(行数)
+        現在表示行数 += 行数
+    end
+
+    return 描画ツール(画面更新, 現在表示行数加算)
 end
 
 function コマンド選択(行動者::Tプレイヤー, プレイヤーs, モンスターs)
@@ -178,9 +189,9 @@ function 行動決定ui処理!(行動者::Tプレイヤー, プレイヤーs, �
     println("$(行動者.名前)のターン")
 end
 
-function モンスター遭遇イベントui処理!(画面更新関数)
+function モンスター遭遇イベントui処理!(描画ツール)
     表示文字列リスト = ["モンスターに遭遇した！", "戦闘開始！"]
-    画面更新関数(表示文字列リスト)
+    描画ツール.画面更新(表示文字列リスト)
 end
 
 function 戦闘勝利イベントui処理!()
