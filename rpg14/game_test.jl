@@ -3,6 +3,7 @@ module GameTest
 include("ui_stub.jl")
 include("乱数.jl")
 include("game.jl")
+include("全角半角判定_test.jl")
 
 using Test
 
