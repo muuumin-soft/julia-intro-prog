@@ -1,6 +1,7 @@
 include("T行動内容.jl")
 include("行動系統.jl")
 include("Tキャラクター.jl")
+include("ui_helper.jl")
 
 struct 描画ツール
     画面更新

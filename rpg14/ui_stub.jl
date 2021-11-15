@@ -1,5 +1,7 @@
 include("T行動内容.jl")
 include("Tキャラクター.jl")
+include("ui_helper.jl")
+
 
 function 攻撃実行ui処理!(攻撃者, コマンド::T通常攻撃, 描画ツール) end
 function 攻撃実行ui処理!(行動者, スキル::Tスキル, 描画ツール) end
