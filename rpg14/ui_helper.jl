@@ -1,10 +1,10 @@
 include("全角半角判定.jl")
 
-function 名前表示調整(名前)
+function 名前表示調整(名前, 全角半角判定器)
     function 文字幅(文字)
-        if is半角(文字)
+        if 全角半角判定器.is半角(文字)
             return 1
-        elseif is全角(文字)
+        elseif 全角半角判定器.is全角(文字)
             return 2
         else 
             throw(ArgumentError("不正な文字です"))
