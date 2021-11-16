@@ -122,7 +122,7 @@ end
 
 function 戦況表示(プレイヤーs, モンスターs)
     function 表示(c::Tキャラクター)
-        s = "$(c.名前) HP:$(c.HP) MP:$(c.MP)"
+        s = "$(名前表示調整(c.名前)) HP:$(c.HP) MP:$(c.MP)"
 
         状態異常s = c.状態異常s
         if length(状態異常s) > 0
