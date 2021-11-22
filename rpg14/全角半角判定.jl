@@ -1,3 +1,5 @@
+include("メモ化.jl")
+
 struct EastAsianWidthMatcher_単一コードポイント
     reg
 end
@@ -76,21 +78,18 @@ function create全角半角判定器()
         end
         return (false, nothing)
     end        
-
-    east_asian_widthメモ = Dict()
+            
     function get_east_asian_width(コードポイント)
-        if haskey(east_asian_widthメモ, コードポイント)
-            return east_asian_widthメモ[コードポイント]
-        end
         for 定義行 in lines
             can_match, east_asian_width = get_east_asian_width(コードポイント, 定義行)
             if can_match
-                east_asian_widthメモ[コードポイント] = east_asian_width
                 return east_asian_width
             end
         end
     end    
-            
+
+    メモ化get_east_asian_width = メモ化(get_east_asian_width)
+
     function is全角byEastAsianWidth特性(e)
         if !(e in ["Na", "N", "W", "F", "H", "A"])
             throw(DomainError("無効なeast_asian_width特性です"))
@@ -100,7 +99,7 @@ function create全角半角判定器()
 
     function is全角(c)    
         コードポイント = Int(c)
-        e = get_east_asian_width(コードポイント)
+        e = メモ化get_east_asian_width(コードポイント)
         return is全角byEastAsianWidth特性(e)
     end
 
