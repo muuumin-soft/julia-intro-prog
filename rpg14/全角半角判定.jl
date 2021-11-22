@@ -77,10 +77,15 @@ function create全角半角判定器()
         return (false, nothing)
     end        
 
+    east_asian_widthメモ = Dict()
     function get_east_asian_width(コードポイント)
+        if haskey(east_asian_widthメモ, コードポイント)
+            return east_asian_widthメモ[コードポイント]
+        end
         for 定義行 in lines
             can_match, east_asian_width = get_east_asian_width(コードポイント, 定義行)
             if can_match
+                east_asian_widthメモ[コードポイント] = east_asian_width
                 return east_asian_width
             end
         end
