@@ -7,16 +7,6 @@ mutable struct メモ化テスト用構造体
     配列
 end
 
-function メモ化用hash(s::メモ化テスト用構造体, hsh::UInt)
-    #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
-    h = hsh
-    h = Base.hash(s, h)
-    for p in propertynames(s, false)
-        h = メモ化用hash(getproperty(s, p), h)
-    end
-    return h    
-end
-
 @testset "メモ化" begin
     function func(a, b, c...; d, e, f...)
         s = 0

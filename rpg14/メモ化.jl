@@ -2,8 +2,21 @@ function メモ化用hash(x::Any)
     return メモ化用hash(x, UInt(0))
 end
 
-function メモ化用hash(x, h::UInt)
+function メモ化用hash(x::Any, h::UInt)
+    if ismutable(x) && isstructtype(typeof(x))
+        return メモ化用hash_可変構造体(x, h) 
+    end
     return Base.hash(x, h)
+end
+
+function メモ化用hash_可変構造体(s, hsh::UInt)
+    #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
+    h = hsh
+    h = Base.hash(s, h)
+    for p in propertynames(s, false)
+        h = メモ化用hash(getproperty(s, p), h)
+    end
+    return h    
 end
 
 function メモ化用hash_allargs(args...; kwargs...)
