@@ -8,12 +8,13 @@ mutable struct メモ化テスト用構造体
 end
 
 function メモ化用hash(s::メモ化テスト用構造体, hsh::UInt)
-    #オブジェクト自体と内部のフィールドも組み合わせてのハッシュ
+    #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
     h = hsh
     h = Base.hash(s, h)
-    h = メモ化用hash(s.数値, h)
-    h = メモ化用hash(s.配列, h)
-    return h
+    for p in propertynames(s, false)
+        h = メモ化用hash(getproperty(s, p), h)
+    end
+    return h    
 end
 
 @testset "メモ化" begin
