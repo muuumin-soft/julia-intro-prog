@@ -94,7 +94,25 @@ end
                 @test g(dict) == 64
                 dict[:a].配列 = [10, 20] #a1(2, [10, 20])
                 @test g(dict) == 71
-            end                
+            end
+            @testset "タプルの可変構造体" begin
+                function f(tuple)
+                    s = 0
+                    for elem in tuple
+                        s += elem.数値 + sum(elem.配列) 
+                    end
+                    return s
+                end
+                g = メモ化(f)
+                tup = (メモ化テスト用構造体(1, [2, 3]), メモ化テスト用構造体(4, [5, 6]), メモ化テスト用構造体(7, [8, 9]))
+                @test g(tup) == 45
+                tup[1].数値 = 2 #(2, [2, 3])
+                @test g(tup) == 46
+                tup[1].配列[1] = 20 #(2, [20, 3])
+                @test g(tup) == 64
+                tup[1].配列 = [10, 20] #a1(2, [10, 20])
+                @test g(tup) == 71
+            end
         end
         @testset "キーワード引数" begin
             @testset "配列" begin
@@ -160,7 +178,25 @@ end
                 @test g(dict = dict1) == 64
                 dict1[:a].配列 = [10, 20] #a1(2, [10, 20])
                 @test g(dict = dict1) == 71
-            end                
+            end
+            @testset "タプルの可変構造体" begin
+                function f(;tuple)
+                    s = 0
+                    for elem in tuple
+                        s += elem.数値 + sum(elem.配列) 
+                    end
+                    return s
+                end
+                g = メモ化(f)
+                tup = (メモ化テスト用構造体(1, [2, 3]), メモ化テスト用構造体(4, [5, 6]), メモ化テスト用構造体(7, [8, 9]))
+                @test g(tuple = tup) == 45
+                tup[1].数値 = 2 #(2, [2, 3])
+                @test g(tuple = tup) == 46
+                tup[1].配列[1] = 20 #(2, [20, 3])
+                @test g(tuple = tup) == 64
+                tup[1].配列 = [10, 20] #a1(2, [10, 20])
+                @test g(tuple = tup) == 71
+            end           
         end
     end
 end

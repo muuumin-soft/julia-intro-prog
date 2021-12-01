@@ -17,6 +17,14 @@ function メモ化用hash(arr::AbstractArray, h::UInt)
     return h
 end
 
+function メモ化用hash(tup::Tuple, h::UInt)
+    h += UInt(0x3353154edfc87de2)
+    for t in tup
+        h = メモ化用hash(t, h)
+    end
+    return h
+end
+
 function メモ化用hash(dict::AbstractDict, h::UInt)
     h += UInt(0x832ca5a1cc82b534)
     for pair in dict
