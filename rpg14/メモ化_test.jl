@@ -30,7 +30,7 @@ end
     end
 
     @testset "可変オブジェクトの中身が変わったとき、不要なメモを参照しないこと" begin
-        @testset "配列" begin
+        @testset "通常引数に対する配列" begin
             f(x) = sum(x)
             g = メモ化(f)
             a = [1, 2]
@@ -40,7 +40,7 @@ end
             a[1] = 10 #[10, 2, 3]
             @test g(a) == 15
         end
-        @testset "構造体" begin
+        @testset "通常引数に対する構造体" begin
             f(x) = x.数値 + sum(x.配列)
             g = メモ化(f)
             s = メモ化テスト用構造体(1, [2, 3])
@@ -51,6 +51,28 @@ end
             @test g(s) == 25
             s.配列 = [10, 20] #(2, [10, 20])
             @test g(s) == 32
+        end
+        @testset "キーワード引数に対する配列" begin
+            f(;x) = sum(x)
+            g = メモ化(f)
+            a = [1, 2]
+            @test g(x = a) == 3
+            push!(a, 3) #[1, 2, 3]
+            @test g(x = a) == 6
+            a[1] = 10 #[10, 2, 3]
+            @test g(x = a) == 15
+        end
+        @testset "キーワード引数に対する構造体" begin
+            f(;x) = x.数値 + sum(x.配列)
+            g = メモ化(f)
+            s = メモ化テスト用構造体(1, [2, 3])
+            @test g(x = s) == 6
+            s.数値 = 2 #(2, [2, 3])
+            @test g(x = s) == 7
+            s.配列[1] = 20 #(2, [20, 3])
+            @test g(x = s) == 25
+            s.配列 = [10, 20] #(2, [10, 20])
+            @test g(x = s) == 32
         end
     end
 end
