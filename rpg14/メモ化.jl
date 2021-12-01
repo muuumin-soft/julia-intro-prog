@@ -34,6 +34,13 @@ function メモ化用hash(dict::AbstractDict, h::UInt)
     return h
 end
 
+function メモ化用hash(pair::Pair, h::UInt)
+    h += UInt(0x5046feabcffb2cf8)
+    h = メモ化用hash(pair.first, h)
+    h = メモ化用hash(pair.second, h)
+    return h
+end
+
 function メモ化用hash_可変構造体(s, hsh::UInt)
     #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
     h = hsh

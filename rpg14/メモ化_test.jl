@@ -113,6 +113,24 @@ end
                 tup[1].配列 = [10, 20] #a1(2, [10, 20])
                 @test g(tup) == 71
             end
+            @testset "ペア中の可変構造体" begin
+                function f(pair)
+                    s = 0
+                    for elem in pair
+                        s += elem.数値 + sum(elem.配列) 
+                    end
+                    return s
+                end
+                g = メモ化(f)
+                pair1 = Pair(メモ化テスト用構造体(1, [2, 3]), メモ化テスト用構造体(4, [5, 6]))
+                @test g(pair1) == 21
+                pair1[1].数値 = 2 #(2, [2, 3])
+                @test g(pair1) == 22
+                pair1[1].配列[1] = 20 #(2, [20, 3])
+                @test g(pair1) == 40
+                pair1[1].配列 = [10, 20] #a1(2, [10, 20])
+                @test g(pair1) == 47
+            end
         end
         @testset "キーワード引数" begin
             @testset "配列" begin
@@ -196,6 +214,24 @@ end
                 @test g(tuple = tup) == 64
                 tup[1].配列 = [10, 20] #a1(2, [10, 20])
                 @test g(tuple = tup) == 71
+            end           
+            @testset "ペア中の可変構造体" begin
+                function f(;pair)
+                    s = 0
+                    for elem in pair
+                        s += elem.数値 + sum(elem.配列) 
+                    end
+                    return s
+                end
+                g = メモ化(f)
+                pair1 = Pair(メモ化テスト用構造体(1, [2, 3]), メモ化テスト用構造体(4, [5, 6]))
+                @test g(pair = pair1) == 21
+                pair1[1].数値 = 2 #(2, [2, 3])
+                @test g(pair = pair1) == 22
+                pair1[1].配列[1] = 20 #(2, [20, 3])
+                @test g(pair = pair1) == 40
+                pair1[1].配列 = [10, 20] #a1(2, [10, 20])
+                @test g(pair = pair1) == 47
             end           
         end
     end
