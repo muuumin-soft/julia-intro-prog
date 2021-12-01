@@ -52,3 +52,19 @@ end
         end
     end
 end
+
+@testset "@メモ化" begin
+    count = 0
+    @メモ化 function sum_with_count(a, b...; c, d...)
+        count += 1
+        return a + sum(b) + c + sum(x.second for x in d)
+    end
+    @test sum_with_count(1, 2, 3; c = 4, d = 5, e = 6) == 21
+    @test count == 1 #初めての呼び出しなので副作用あり
+    @test sum_with_count(1, 2, 3; c = 4, d = 5, e = 6) == 21
+    @test count == 1 #メモ化が効いているので副作用なし
+    @test sum_with_count(1, 2, 3, 7; c = 4, d = 5, e = 6) == 28
+    @test count == 2 #別の引数での初めての呼び出しなので副作用あり
+    @test sum_with_count(1, 2, 3, 7; c = 4, d = 5, e = 6) == 28
+    @test count == 2 #メモ化が効いているので副作用なし
+end

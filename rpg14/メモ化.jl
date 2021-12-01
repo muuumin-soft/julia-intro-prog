@@ -43,3 +43,23 @@ function メモ化(func)
         return val
     end
 end
+
+using  MacroTools
+
+macro メモ化(関数定義)
+    関数定義dict = try
+        splitdef(関数定義)
+    catch
+        error("＠メモ化 は関数定義にのみ適用可能です")
+    end
+    関数名 = 関数定義dict[:name]
+
+    非メモ化関数定義dict = copy(関数定義dict)
+    非メモ化関数定義dict[:name] = Symbol("##非メモ化", 関数名)
+    非メモ化関数定義= combinedef(非メモ化関数定義dict)
+    
+    return esc(quote
+        $(非メモ化関数定義)
+        $(関数名) = メモ化($(非メモ化関数定義dict[:name]))
+    end)
+end
