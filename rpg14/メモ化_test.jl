@@ -131,6 +131,26 @@ end
                 pair1[1].配列 = [10, 20] #a1(2, [10, 20])
                 @test g(pair1) == 47
             end
+            @testset "セット中の可変構造体" begin
+                function f(set)
+                    s = 0
+                    for elem in set
+                        s += elem.数値 + sum(elem.配列) 
+                    end
+                    return s
+                end
+                g = メモ化(f)
+                a = メモ化テスト用構造体(1, [2, 3])
+                b = メモ化テスト用構造体(4, [5, 6])
+                set = Set([a, b])
+                @test g(set) == 21
+                a.数値 = 2 #(2, [2, 3])
+                @test g(set) == 22
+                a.配列[1] = 20 #(2, [20, 3])
+                @test g(set) == 40
+                a.配列 = [10, 20] #a1(2, [10, 20])
+                @test g(set) == 47
+            end
         end
         @testset "キーワード引数" begin
             @testset "配列" begin
@@ -233,6 +253,26 @@ end
                 pair1[1].配列 = [10, 20] #a1(2, [10, 20])
                 @test g(pair = pair1) == 47
             end           
+            @testset "セット中の可変構造体" begin
+                function f(;set)
+                    s = 0
+                    for elem in set
+                        s += elem.数値 + sum(elem.配列) 
+                    end
+                    return s
+                end
+                g = メモ化(f)
+                a = メモ化テスト用構造体(1, [2, 3])
+                b = メモ化テスト用構造体(4, [5, 6])
+                set1 = Set([a, b])
+                @test g(set=set1) == 21
+                a.数値 = 2 #(2, [2, 3])
+                @test g(set=set1) == 22
+                a.配列[1] = 20 #(2, [20, 3])
+                @test g(set=set1) == 40
+                a.配列 = [10, 20] #a1(2, [10, 20])
+                @test g(set=set1) == 47
+            end
         end
     end
 end

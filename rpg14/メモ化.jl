@@ -41,6 +41,14 @@ function メモ化用hash(pair::Pair, h::UInt)
     return h
 end
 
+function メモ化用hash(set::Set, h::UInt)
+    h += UInt(0x1ad119380dcd30ee)
+    for elem in set
+        h = メモ化用hash(elem, h)
+    end
+    return h
+end
+
 function メモ化用hash_可変構造体(s, hsh::UInt)
     #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
     h = hsh
