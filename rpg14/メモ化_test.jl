@@ -52,6 +52,27 @@ end
             s.配列 = [10, 20] #(2, [10, 20])
             @test g(s) == 32
         end
+        @testset "通常引数に対する配列中の可変構造体" begin
+            function f(arr)
+                s = 0
+                for a in arr
+                    s += a.数値 + sum(a.配列) 
+                end
+                return s
+            end
+            g = メモ化(f)
+            a1 = メモ化テスト用構造体(1, [2, 3])
+            a2 = メモ化テスト用構造体(4, [5, 6])
+            a3 = メモ化テスト用構造体(7, [8, 9])
+            arr = [a1, a2, a3]
+            @test g(arr) == 45
+            a1.数値 = 2 #a1(2, [2, 3])
+            @test g(arr) == 46
+            a1.配列[1] = 20 #a1(2, [20, 3])
+            @test g(arr) == 64
+            a1.配列 = [10, 20] #a1(2, [10, 20])
+            @test g(arr) == 71
+        end
         @testset "キーワード引数に対する配列" begin
             f(;x) = sum(x)
             g = メモ化(f)
@@ -73,6 +94,27 @@ end
             @test g(x = s) == 25
             s.配列 = [10, 20] #(2, [10, 20])
             @test g(x = s) == 32
+        end
+        @testset "キーワード引数に対する配列中の可変構造体" begin
+            function f(;arr)
+                s = 0
+                for a in arr
+                    s += a.数値 + sum(a.配列) 
+                end
+                return s
+            end
+            g = メモ化(f)
+            a1 = メモ化テスト用構造体(1, [2, 3])
+            a2 = メモ化テスト用構造体(4, [5, 6])
+            a3 = メモ化テスト用構造体(7, [8, 9])
+            arr1 = [a1, a2, a3]
+            @test g(;arr = arr1) == 45
+            a1.数値 = 2 #a1(2, [2, 3])
+            @test g(;arr = arr1) == 46
+            a1.配列[1] = 20 #a1(2, [20, 3])
+            @test g(;arr = arr1) == 64
+            a1.配列 = [10, 20] #a1(2, [10, 20])
+            @test g(;arr = arr1) == 71
         end
     end
 end

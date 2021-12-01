@@ -9,6 +9,14 @@ function メモ化用hash(x::Any, h::UInt)
     return Base.hash(x, h)
 end
 
+function メモ化用hash(arr::AbstractArray, h::UInt)
+    h += UInt(0x678f70fafbaac9d0)
+    for a in arr
+        h = メモ化用hash(a, h)
+    end
+    return h
+end
+
 function メモ化用hash_可変構造体(s, hsh::UInt)
     #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
     h = hsh
