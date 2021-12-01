@@ -17,6 +17,15 @@ function メモ化用hash(arr::AbstractArray, h::UInt)
     return h
 end
 
+function メモ化用hash(dict::AbstractDict, h::UInt)
+    h += UInt(0x832ca5a1cc82b534)
+    for pair in dict
+        h = メモ化用hash(pair.first, h)
+        h = メモ化用hash(pair.second, h)
+    end
+    return h
+end
+
 function メモ化用hash_可変構造体(s, hsh::UInt)
     #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
     h = hsh
