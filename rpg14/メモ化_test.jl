@@ -30,133 +30,137 @@ end
     end
 
     @testset "可変オブジェクトの中身が変わったとき、不要なメモを参照しないこと" begin
-        @testset "通常引数に対する配列" begin
-            f(x) = sum(x)
-            g = メモ化(f)
-            a = [1, 2]
-            @test g(a) == 3
-            push!(a, 3) #[1, 2, 3]
-            @test g(a) == 6
-            a[1] = 10 #[10, 2, 3]
-            @test g(a) == 15
-        end
-        @testset "通常引数に対する構造体" begin
-            f(x) = x.数値 + sum(x.配列)
-            g = メモ化(f)
-            s = メモ化テスト用構造体(1, [2, 3])
-            @test g(s) == 6
-            s.数値 = 2 #(2, [2, 3])
-            @test g(s) == 7
-            s.配列[1] = 20 #(2, [20, 3])
-            @test g(s) == 25
-            s.配列 = [10, 20] #(2, [10, 20])
-            @test g(s) == 32
-        end
-        @testset "通常引数に対する配列中の可変構造体" begin
-            function f(arr)
-                s = 0
-                for a in arr
-                    s += a.数値 + sum(a.配列) 
-                end
-                return s
+        @testset "通常引数" begin
+            @testset "配列" begin
+                f(x) = sum(x)
+                g = メモ化(f)
+                a = [1, 2]
+                @test g(a) == 3
+                push!(a, 3) #[1, 2, 3]
+                @test g(a) == 6
+                a[1] = 10 #[10, 2, 3]
+                @test g(a) == 15
             end
-            g = メモ化(f)
-            a1 = メモ化テスト用構造体(1, [2, 3])
-            a2 = メモ化テスト用構造体(4, [5, 6])
-            a3 = メモ化テスト用構造体(7, [8, 9])
-            arr = [a1, a2, a3]
-            @test g(arr) == 45
-            a1.数値 = 2 #a1(2, [2, 3])
-            @test g(arr) == 46
-            a1.配列[1] = 20 #a1(2, [20, 3])
-            @test g(arr) == 64
-            a1.配列 = [10, 20] #a1(2, [10, 20])
-            @test g(arr) == 71
-        end
-        @testset "通常引数に対する辞書中の可変構造体" begin
-            function f(dict)
-                s = 0
-                for value in values(dict)
-                    s += value.数値 + sum(value.配列) 
-                end
-                return s
+            @testset "可変構造体" begin
+                f(x) = x.数値 + sum(x.配列)
+                g = メモ化(f)
+                s = メモ化テスト用構造体(1, [2, 3])
+                @test g(s) == 6
+                s.数値 = 2 #(2, [2, 3])
+                @test g(s) == 7
+                s.配列[1] = 20 #(2, [20, 3])
+                @test g(s) == 25
+                s.配列 = [10, 20] #(2, [10, 20])
+                @test g(s) == 32
             end
-            g = メモ化(f)
-            dict = Dict()
-            dict[:a] = メモ化テスト用構造体(1, [2, 3])
-            dict[:b] = メモ化テスト用構造体(4, [5, 6])
-            dict[:c] = メモ化テスト用構造体(7, [8, 9])
-            @test g(dict) == 45
-            dict[:a].数値 = 2 #(2, [2, 3])
-            @test g(dict) == 46
-            dict[:a].配列[1] = 20 #(2, [20, 3])
-            @test g(dict) == 64
-            dict[:a].配列 = [10, 20] #a1(2, [10, 20])
-            @test g(dict) == 71
-        end
-        @testset "キーワード引数に対する配列" begin
-            f(;x) = sum(x)
-            g = メモ化(f)
-            a = [1, 2]
-            @test g(x = a) == 3
-            push!(a, 3) #[1, 2, 3]
-            @test g(x = a) == 6
-            a[1] = 10 #[10, 2, 3]
-            @test g(x = a) == 15
-        end
-        @testset "キーワード引数に対する構造体" begin
-            f(;x) = x.数値 + sum(x.配列)
-            g = メモ化(f)
-            s = メモ化テスト用構造体(1, [2, 3])
-            @test g(x = s) == 6
-            s.数値 = 2 #(2, [2, 3])
-            @test g(x = s) == 7
-            s.配列[1] = 20 #(2, [20, 3])
-            @test g(x = s) == 25
-            s.配列 = [10, 20] #(2, [10, 20])
-            @test g(x = s) == 32
-        end
-        @testset "キーワード引数に対する配列中の可変構造体" begin
-            function f(;arr)
-                s = 0
-                for a in arr
-                    s += a.数値 + sum(a.配列) 
+            @testset "配列中の可変構造体" begin
+                function f(arr)
+                    s = 0
+                    for a in arr
+                        s += a.数値 + sum(a.配列) 
+                    end
+                    return s
                 end
-                return s
+                g = メモ化(f)
+                a1 = メモ化テスト用構造体(1, [2, 3])
+                a2 = メモ化テスト用構造体(4, [5, 6])
+                a3 = メモ化テスト用構造体(7, [8, 9])
+                arr = [a1, a2, a3]
+                @test g(arr) == 45
+                a1.数値 = 2 #a1(2, [2, 3])
+                @test g(arr) == 46
+                a1.配列[1] = 20 #a1(2, [20, 3])
+                @test g(arr) == 64
+                a1.配列 = [10, 20] #a1(2, [10, 20])
+                @test g(arr) == 71
             end
-            g = メモ化(f)
-            a1 = メモ化テスト用構造体(1, [2, 3])
-            a2 = メモ化テスト用構造体(4, [5, 6])
-            a3 = メモ化テスト用構造体(7, [8, 9])
-            arr1 = [a1, a2, a3]
-            @test g(;arr = arr1) == 45
-            a1.数値 = 2 #a1(2, [2, 3])
-            @test g(;arr = arr1) == 46
-            a1.配列[1] = 20 #a1(2, [20, 3])
-            @test g(;arr = arr1) == 64
-            a1.配列 = [10, 20] #a1(2, [10, 20])
-            @test g(;arr = arr1) == 71
-        end
-        @testset "キーワード引数に対する辞書中の可変構造体" begin
-            function f(;dict)
-                s = 0
-                for value in values(dict)
-                    s += value.数値 + sum(value.配列) 
+            @testset "辞書中の可変構造体" begin
+                function f(dict)
+                    s = 0
+                    for value in values(dict)
+                        s += value.数値 + sum(value.配列) 
+                    end
+                    return s
                 end
-                return s
+                g = メモ化(f)
+                dict = Dict()
+                dict[:a] = メモ化テスト用構造体(1, [2, 3])
+                dict[:b] = メモ化テスト用構造体(4, [5, 6])
+                dict[:c] = メモ化テスト用構造体(7, [8, 9])
+                @test g(dict) == 45
+                dict[:a].数値 = 2 #(2, [2, 3])
+                @test g(dict) == 46
+                dict[:a].配列[1] = 20 #(2, [20, 3])
+                @test g(dict) == 64
+                dict[:a].配列 = [10, 20] #a1(2, [10, 20])
+                @test g(dict) == 71
+            end                
+        end
+        @testset "キーワード引数" begin
+            @testset "配列" begin
+                f(;x) = sum(x)
+                g = メモ化(f)
+                a = [1, 2]
+                @test g(x = a) == 3
+                push!(a, 3) #[1, 2, 3]
+                @test g(x = a) == 6
+                a[1] = 10 #[10, 2, 3]
+                @test g(x = a) == 15
             end
-            g = メモ化(f)
-            dict1 = Dict()
-            dict1[:a] = メモ化テスト用構造体(1, [2, 3])
-            dict1[:b] = メモ化テスト用構造体(4, [5, 6])
-            dict1[:c] = メモ化テスト用構造体(7, [8, 9])
-            @test g(dict = dict1) == 45
-            dict1[:a].数値 = 2 #(2, [2, 3])
-            @test g(dict = dict1) == 46
-            dict1[:a].配列[1] = 20 #(2, [20, 3])
-            @test g(dict = dict1) == 64
-            dict1[:a].配列 = [10, 20] #a1(2, [10, 20])
-            @test g(dict = dict1) == 71
+            @testset "可変構造体" begin
+                f(;x) = x.数値 + sum(x.配列)
+                g = メモ化(f)
+                s = メモ化テスト用構造体(1, [2, 3])
+                @test g(x = s) == 6
+                s.数値 = 2 #(2, [2, 3])
+                @test g(x = s) == 7
+                s.配列[1] = 20 #(2, [20, 3])
+                @test g(x = s) == 25
+                s.配列 = [10, 20] #(2, [10, 20])
+                @test g(x = s) == 32
+            end
+            @testset "配列中の可変構造体" begin
+                function f(;arr)
+                    s = 0
+                    for a in arr
+                        s += a.数値 + sum(a.配列) 
+                    end
+                    return s
+                end
+                g = メモ化(f)
+                a1 = メモ化テスト用構造体(1, [2, 3])
+                a2 = メモ化テスト用構造体(4, [5, 6])
+                a3 = メモ化テスト用構造体(7, [8, 9])
+                arr1 = [a1, a2, a3]
+                @test g(;arr = arr1) == 45
+                a1.数値 = 2 #a1(2, [2, 3])
+                @test g(;arr = arr1) == 46
+                a1.配列[1] = 20 #a1(2, [20, 3])
+                @test g(;arr = arr1) == 64
+                a1.配列 = [10, 20] #a1(2, [10, 20])
+                @test g(;arr = arr1) == 71
+            end
+            @testset "辞書中の可変構造体" begin
+                function f(;dict)
+                    s = 0
+                    for value in values(dict)
+                        s += value.数値 + sum(value.配列) 
+                    end
+                    return s
+                end
+                g = メモ化(f)
+                dict1 = Dict()
+                dict1[:a] = メモ化テスト用構造体(1, [2, 3])
+                dict1[:b] = メモ化テスト用構造体(4, [5, 6])
+                dict1[:c] = メモ化テスト用構造体(7, [8, 9])
+                @test g(dict = dict1) == 45
+                dict1[:a].数値 = 2 #(2, [2, 3])
+                @test g(dict = dict1) == 46
+                dict1[:a].配列[1] = 20 #(2, [20, 3])
+                @test g(dict = dict1) == 64
+                dict1[:a].配列 = [10, 20] #a1(2, [10, 20])
+                @test g(dict = dict1) == 71
+            end                
         end
     end
 end
