@@ -6,7 +6,10 @@ function メモ化用hash(x::Any, h::UInt)
     if ismutable(x) && isstructtype(typeof(x))
         return メモ化用hash_可変構造体(x, h) 
     end
-    return Base.hash(x, h)
+    if isprimitivetype(typeof(x))
+        return Base.hash(x, h)
+    end
+    throw(DomainError("メモ化用hashが想定外の型に対して適用されました"))
 end
 
 function メモ化用hash(arr::AbstractArray, h::UInt)
