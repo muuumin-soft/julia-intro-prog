@@ -7,6 +7,11 @@ mutable struct メモ化テスト用構造体
     配列
 end
 
+struct メモ化テスト用不変構造体
+    数値
+    配列
+end
+
 @testset "メモ化" begin
     @testset "複雑な引数" begin
         function func(a, b, c...; d, e, f...)
@@ -274,6 +279,31 @@ end
                 @test g(set=set1) == 47
             end
         end
+    end
+    @testset "不変構造体" begin
+        f(x) = x.数値 + sum(x.配列)
+        g = メモ化(f)
+        s = メモ化テスト用不変構造体(1, [2, 3])
+        @test g(s) == 6
+        s.配列[1] = 20 #(1, [20, 3])
+        @test g(s) == 24
+    end
+    @testset "配列中の不変構造体" begin
+        function f(arr)
+            s = 0
+            for a in arr
+                s += a.数値 + sum(a.配列) 
+            end
+            return s
+        end
+        g = メモ化(f)
+        a1 = メモ化テスト用不変構造体(1, [2, 3])
+        a2 = メモ化テスト用不変構造体(4, [5, 6])
+        a3 = メモ化テスト用不変構造体(7, [8, 9])
+        arr = [a1, a2, a3]
+        @test g(arr) == 45
+        a1.配列[1] = 20 #a1(1, [20, 3])
+        @test g(arr) == 63
     end
 end
 

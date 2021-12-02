@@ -3,13 +3,23 @@ function メモ化用hash(x::Any)
 end
 
 function メモ化用hash(x::Any, h::UInt)
-    if ismutable(x) && isstructtype(typeof(x))
-        return メモ化用hash_可変構造体(x, h) 
+    if isstructtype(typeof(x))
+        return メモ化用hash_構造体(x, h) 
     end
     if isprimitivetype(typeof(x))
         return Base.hash(x, h)
     end
     throw(DomainError("メモ化用hashが想定外の型に対して適用されました"))
+end
+
+function メモ化用hash_構造体(s, hsh::UInt)
+    #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
+    h = hsh
+    h = Base.hash(s, h)
+    for p in propertynames(s, false)
+        h = メモ化用hash(getproperty(s, p), h)
+    end
+    return h    
 end
 
 function メモ化用hash(arr::AbstractArray, h::UInt)
@@ -50,16 +60,6 @@ function メモ化用hash(set::Set, h::UInt)
         h = メモ化用hash(elem, h)
     end
     return h
-end
-
-function メモ化用hash_可変構造体(s, hsh::UInt)
-    #オブジェクトそのものが同一で、かつ、内部のフィールドも同値
-    h = hsh
-    h = Base.hash(s, h)
-    for p in propertynames(s, false)
-        h = メモ化用hash(getproperty(s, p), h)
-    end
-    return h    
 end
 
 function メモ化用hash_allargs(args...; kwargs...)
